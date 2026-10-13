@@ -1,0 +1,178 @@
+<title>Space vs Milanote — Raio-X do código</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* layout: one reading column, sections as compact tables; a left status strip marks each gap's state */
+:root{
+  --bg:#f3f3f5; --card:#ffffff; --fg:#1c1c1f; --fg2:#5d5d66; --line:#dcdce2;
+  --accent:#0a6cd6; --ok:#2b9a5a; --miss:#d2473b; --part:#d98a1f; --skip:#8a8a94;
+  --okbg:#e6f5ec; --missbg:#fbe9e7; --partbg:#fdf1e1; --skipbg:#ececef;
+  --sans:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#141416; --card:#1f1f23; --fg:#ededf0; --fg2:#a2a2ad; --line:#303036; --accent:#4c9ef8; --ok:#5dcf8a; --miss:#f07a6d; --part:#f0b45c; --skip:#9a9aa6; --okbg:#173224; --missbg:#3a2220; --partbg:#3b2d16; --skipbg:#26262c; color-scheme:dark } }
+:root[data-theme="dark"]{ --bg:#141416; --card:#1f1f23; --fg:#ededf0; --fg2:#a2a2ad; --line:#303036; --accent:#4c9ef8; --ok:#5dcf8a; --miss:#f07a6d; --part:#f0b45c; --skip:#9a9aa6; --okbg:#173224; --missbg:#3a2220; --partbg:#3b2d16; --skipbg:#26262c; color-scheme:dark }
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5;padding-block:32px 64px;padding-inline:16px}
+.wrap{max-width:860px;margin:0 auto}
+h1{font-size:26px;font-weight:600;letter-spacing:-.02em;margin:0 0 6px;text-wrap:balance}
+.sub{color:var(--fg2);margin:0 0 24px;max-width:65ch}
+h2{font-size:17px;font-weight:600;margin:36px 0 10px;letter-spacing:-.01em}
+h2 small{font-weight:400;color:var(--fg2);font-size:13px;margin-left:8px}
+p{max-width:65ch}
+.src{font-family:var(--mono);font-size:12px;color:var(--fg2);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:0 0 20px;overflow-x:auto}
+.src b{color:var(--fg);font-weight:500}
+.kpis{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 8px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:120px;flex:1}
+.kpi b{display:block;font-size:22px;font-weight:600;font-variant-numeric:tabular-nums}
+.kpi span{font-size:12px;color:var(--fg2);text-transform:uppercase;letter-spacing:.05em}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:14px}
+th,td{text-align:left;padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+thead th{border-top:0;font-size:12px;color:var(--fg2);text-transform:uppercase;letter-spacing:.05em;font-weight:500;background:color-mix(in srgb,var(--card) 70%,var(--bg))}
+td.st{width:92px;white-space:nowrap}
+.tag{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:999px;letter-spacing:.02em}
+.ok{background:var(--okbg);color:var(--ok)} .miss{background:var(--missbg);color:var(--miss)} .part{background:var(--partbg);color:var(--part)} .skip{background:var(--skipbg);color:var(--skip)}
+kbd{font-family:var(--mono);font-size:12px;background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:0 5px}
+.tw{overflow-x:auto}
+ol.plan{padding-left:22px;max-width:65ch} ol.plan li{margin:6px 0}
+.note{font-size:13px;color:var(--fg2);max-width:65ch}
+</style>
+<div class="wrap">
+<h1>Space vs Milanote — raio-X do código</h1>
+<p class="sub">Passada sistemática feita com o REA no app Milanote de desktop (v3.18.138): o pacote traz os source maps, então foi possível ler o código-fonte original (10.068 arquivos). Abaixo, o que o Milanote faz de fato, cruzado com o estado atual do Space. <b>Atualizado na v0.7</b>: as 8 etapas da seção 5 (v0.6) e os 10 itens da segunda passada (seção 8) foram implementados e testados — 46 + 76 testes automatizados.</p>
+
+<div class="src"><b>Fonte</b> /Applications/Milanote.app → app.asar → build/*.js.map (sourcesContent) → src/client, src/common.<br>Arquivos lidos: contextMenu/configs + items + predicates · shortcuts/keyboardShortcuts.js · shortcuts/clipboard/* · toolbar/config/* · element/*/index.js · components/collision/* · common/colors/colorConstants.ts · common/elements/elementConstants.ts · utils/grid/gridConstants.ts · locales/en.</div>
+
+<div class="kpis">
+<div class="kpi"><b>70</b><span>itens já iguais</span></div>
+<div class="kpi"><b>1</b><span>faltando</span></div>
+<div class="kpi"><b>1</b><span>parciais</span></div>
+<div class="kpi"><b>5</b><span>fora de escopo</span></div>
+</div>
+<p class="note">Legenda: <span class="tag ok">igual</span> funciona no Space como no Milanote · <span class="tag part">parcial</span> existe mas difere · <span class="tag miss">falta</span> não existe no Space · <span class="tag skip">pular</span> colaboração/conta, sem sentido pra uso pessoal.</p>
+
+<h2>1. Menu de contexto no fundo do quadro <small>canvasContextMenuConfig.ts</small></h2>
+<p>Ordem real no código: Paste · Undo, Redo · Select All · New Note, Link, To-do, Line, Board, Column, Comment, Table · Change Board Background (Show Dot Grid, cores, Choose Custom Color, Revert to Default) · New Image/File Placeholder · New Public Template.</p>
+<div class="tw"><table><thead><tr><th>Item</th><th>Space</th><th>Observação</th></tr></thead><tbody>
+<tr><td>Paste / Undo / Redo / Select all / New …</td><td class="st"><span class="tag ok">igual</span></td><td>Feito hoje. Paste pelo menu cola no ponto clicado (no Milanote, só elementos copiados do próprio app).</td></tr>
+<tr><td>Change Board Background</td><td class="st"><span class="tag ok">igual</span></td><td>Milanote tem também "Show Dot Grid" (liga/desliga a grade de pontos) e "Choose Custom Color".</td></tr>
+<tr><td>New Image/File Placeholder</td><td class="st"><span class="tag ok">igual</span></td><td></td></tr>
+<tr><td>New Public Template</td><td class="st"><span class="tag skip">pular</span></td><td>Recurso de conta.</td></tr>
+</tbody></table></div>
+
+<h2>2. Menu de contexto num cartão <small>elementContextMenuConfig.ts + predicates</small></h2>
+<p>Seções, na ordem: área de transferência · renomear · quadro · mídia · desenho · agrupar · conversões · travar · ordem · metadados.</p>
+<div class="tw"><table><thead><tr><th>Item (quando aparece)</th><th>Space</th><th>Observação</th></tr></thead><tbody>
+<tr><td>Paste (só com coluna selecionada e clipboard cheio)</td><td class="st"><span class="tag ok">igual</span></td><td>Cola dentro da coluna.</td></tr>
+<tr><td>Cut <kbd>⌘X</kbd></td><td class="st"><span class="tag ok">igual</span></td><td></td></tr>
+<tr><td>Copy <kbd>⌘C</kbd> · Duplicate <kbd>⌘D</kbd> · Move to Trash <kbd>⌫</kbd></td><td class="st"><span class="tag ok">igual</span></td><td></td></tr>
+<tr><td>Paste Styles <kbd>⌘⌥V</kbd></td><td class="st"><span class="tag ok">igual</span></td><td>Aplica cor/estilo do elemento copiado nos selecionados.</td></tr>
+<tr><td>Create Synced Copy</td><td class="st"><span class="tag skip">pular</span></td><td>Clone sincronizado; complexo, pouco uso pessoal.</td></tr>
+<tr><td>Rename <kbd>↩</kbd> (board, coluna, documento, arquivo, link)</td><td class="st"><span class="tag ok">igual</span></td><td>Return já edita no Space; falta o item no menu.</td></tr>
+<tr><td>Open in New Tab · Create a Shortcut to This Board · Copy a Link to This Board · Convert to Template</td><td class="st"><span class="tag skip">pular</span></td><td>Dependem de URL/conta. "Shortcut" = alias de quadro (fica pro backlog longo).</td></tr>
+<tr><td>Download Original Image(s) / Download (arquivo)</td><td class="st"><span class="tag ok">igual</span></td><td>Space baixa arquivo pela toolbar; falta no menu e pra imagens.</td></tr>
+<tr><td>Replace Image / Replace Preview (vídeo) · Add Image (link sem imagem)</td><td class="st"><span class="tag ok">igual</span></td><td></td></tr>
+<tr><td>Copy Link Address (link)</td><td class="st"><span class="tag ok">igual</span></td><td></td></tr>
+<tr><td>Crop Image to Fit Dot Grid (toggle)</td><td class="st"><span class="tag ok">igual</span></td><td>Milanote por padrão corta a imagem pra altura múltipla da grade; o toggle mostra a proporção inteira.</td></tr>
+<tr><td>Download SVG (desenho)</td><td class="st"><span class="tag ok">igual</span></td><td></td></tr>
+<tr><td>Group into Column (2+ cartões no canvas)</td><td class="st"><span class="tag ok">igual</span></td><td>Cria coluna com os selecionados, na ordem.</td></tr>
+<tr><td>Connect with Lines (2+ cartões) <kbd>⌘K</kbd></td><td class="st"><span class="tag ok">igual</span></td><td>Space tem ⌘L pra conectar? Precisa alinhar atalho e menu.</td></tr>
+<tr><td>Convert to Sketch Card (anotação)</td><td class="st"><span class="tag ok">igual</span></td><td></td></tr>
+<tr><td>Convert to Note ⇄ Convert to Document · Convert to Board (coluna)</td><td class="st"><span class="tag ok">igual</span></td><td>Conversões sem perder conteúdo.</td></tr>
+<tr><td>Lock Position · Bring to Front · Send to Back</td><td class="st"><span class="tag ok">igual</span></td><td></td></tr>
+<tr><td>Created by … / Modified … (rodapé do menu)</td><td class="st"><span class="tag ok">igual</span></td><td>Pra uso pessoal: "Criado em / editado em".</td></tr>
+</tbody></table></div>
+
+<h2>3. Atalhos de teclado <small>keyboardShortcuts.js</small></h2>
+<div class="tw"><table><thead><tr><th>Atalho</th><th>Ação</th><th>Space</th></tr></thead><tbody>
+<tr><td><kbd>⌫</kbd> <kbd>⌘⌫</kbd></td><td>Move to trash</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td><kbd>⌥`</kbd></td><td>Mover selecionados pro Unsorted</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td><kbd>⌘\</kbd></td><td>Abrir/fechar Unsorted</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td>Setas / <kbd>⇧</kbd>+setas</td><td>Nudge 1 / 5 unidades</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td><kbd>⌘F</kbd> · <kbd>⌘A</kbd> · <kbd>⌘Z</kbd> <kbd>⌘⇧Z</kbd> · <kbd>⌘D</kbd> · <kbd>⌘⇧↑</kbd> <kbd>⌘⇧↓</kbd> · <kbd>Esc</kbd> · <kbd>↩</kbd> edita</td><td>Básicos</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td><kbd>⌘X</kbd></td><td>Cut</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td><kbd>⌥W</kbd> <kbd>⌥A</kbd> <kbd>⌥S</kbd> <kbd>⌥D</kbd> <kbd>⌥H</kbd> <kbd>⌥V</kbd></td><td>Alinhar topo / esquerda / base / direita / centro H / centro V</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td><kbd>⌘⌥V</kbd></td><td>Paste styles</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td><kbd>⌘⌥⇧V</kbd> <kbd>⌘⌥⇧H</kbd></td><td>Distribuir vertical / horizontal</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td><kbd>⌘↩</kbd></td><td>Novo elemento do mesmo tipo do selecionado (abaixo, empurrando vizinhos)</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td><kbd>⌥↩</kbd></td><td>Ação secundária (ex.: título da to-do list)</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td><kbd>⌘⇧,</kbd> <kbd>⌘⇧.</kbd></td><td>Interface menor / maior (grade 8 → 9 → 10 px)</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td><kbd>⌘⇧D</kbd> · <kbd>⌘⌥P</kbd></td><td>Tema · Apresentação</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td><kbd>⌘U</kbd> · <kbd>⌘⇧U</kbd></td><td>Quadro pai · descer na hierarquia</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td><kbd>Space</kbd>+arrastar · <kbd>Z</kbd> · <kbd>⌘+</kbd> <kbd>⌘−</kbd> <kbd>⌘0</kbd></td><td>Pan · fit · zoom</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td><kbd>⌘K</kbd></td><td>Conectar selecionados com linhas</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td><kbd>/</kbd></td><td>Painel de atalhos</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td><kbd>⇧D</kbd></td><td>Modo anotação (desenhar sobre o quadro)</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td>Duplo clique no fundo</td><td>Nova nota</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td><kbd>⌥</kbd>+arrastar</td><td>Duplicar</td><td class="st"><span class="tag ok">igual</span></td></tr>
+<tr><td>Markdown ao digitar: <kbd>#</kbd> <kbd>##</kbd> <kbd>*</kbd> <kbd>1.</kbd> <kbd>[]</kbd> <kbd>&gt;</kbd> <kbd>!</kbd> <kbd>```</kbd> <kbd>---</kbd></td><td>Título, lista, checkbox, citação, callout, código, divisor</td><td class="st"><span class="tag ok">igual</span></td></tr>
+</tbody></table></div>
+
+<h2>4. Comportamentos que só o código mostra</h2>
+<div class="tw"><table><thead><tr><th>Comportamento</th><th>Space</th><th>Como funciona no Milanote</th></tr></thead><tbody>
+<tr><td>Empurrar vizinhos (collision)</td><td class="st"><span class="tag ok">igual</span></td><td>Quando um cartão cresce (digitando, adicionando tarefa, soltando algo numa coluna), os cartões logo abaixo descem junto, mantendo o espaço que tinham (até 3 unidades; acima disso vira 2). Limite de 15 movimentos em cadeia.</td></tr>
+<tr><td>Colar conteúdo externo</td><td class="st"><span class="tag ok">igual</span></td><td>Texto, link e arquivo colados com ⌘V vão pro <b>Unsorted</b> (index 0). Decisão pendente resolvida: Space já faz igual.</td></tr>
+<tr><td>Colar texto com imagem/link/arquivo selecionado</td><td class="st"><span class="tag ok">igual</span></td><td>Se o elemento não tem legenda, o texto colado vira a legenda.</td></tr>
+<tr><td>Colar tabela (HTML ou TSV ≥ 2×2)</td><td class="st"><span class="tag ok">igual</span></td><td>Vira um cartão Tabela.</td></tr>
+<tr><td>Colar lista de tarefas</td><td class="st"><span class="tag ok">igual</span></td><td>Vira uma To-do list.</td></tr>
+<tr><td>Quick line</td><td class="st"><span class="tag ok">igual</span></td><td>Com um único cartão selecionado (canvas ou coluna) aparece uma alça; arrastar dela cria uma linha já conectada.</td></tr>
+<tr><td>Duplo clique na alça de redimensionar</td><td class="st"><span class="tag ok">igual</span></td><td>Alterna entre largura padrão (34 unidades) e largura natural da mídia.</td></tr>
+<tr><td>Larguras</td><td class="st"><span class="tag ok">igual</span></td><td>Padrão 34 unidades de grade (= 340 px), mínimo 8. Space usa 340 px.</td></tr>
+<tr><td>Tamanho da interface</td><td class="st"><span class="tag ok">igual</span></td><td>Grade de 8, 9 ou 10 px (small/medium/large); tudo escala junto.</td></tr>
+<tr><td>Paleta de cores</td><td class="st"><span class="tag ok">igual</span></td><td>11 fixas (grey, cyan, green, brown, yellow, orange, red, pink, purple, blue, deep blue) + transparente + custom. Colunas usam versão mais clara. Modo por cartão: <b>Background</b> ou <b>Top strip</b>.</td></tr>
+<tr><td>Imagem cortada na grade</td><td class="st"><span class="tag ok">igual</span></td><td>Padrão corta a altura pra múltiplo da grade; "Crop to fit dot grid" desliga.</td></tr>
+<tr><td>Modos de exibição (arquivo, documento)</td><td class="st"><span class="tag ok">igual</span></td><td>Icon view (10×14 unidades) ou card view; toggle "Display info" em link/arquivo; toggle "Title" em to-do e tabela.</td></tr>
+<tr><td>Tipos de link</td><td class="st"><span class="tag ok">igual</span></td><td>Audio = colar link do Spotify/SoundCloud; Map = colar link do Google Maps; Video = YouTube/Vimeo. No Space, Audio é upload e Map é busca por texto.</td></tr>
+<tr><td>Estilos de texto</td><td class="st"><span class="tag ok">igual</span></td><td>Large heading, Normal heading, Normal text, Small text, Callout, Quote block, Code block.</td></tr>
+<tr><td>Menu Inserir (no editor)</td><td class="st"><span class="tag ok">igual</span></td><td>Link para quadro, linha divisória, emoji, menção.</td></tr>
+<tr><td>Tabela</td><td class="st"><span class="tag part">parcial</span></td><td>Fórmulas (=SUM…), tipo de célula, formato, cor, alinhamento, menu de linhas/colunas.</td></tr>
+<tr><td>Comentário anexado</td><td class="st"><span class="tag part">parcial</span></td><td>Comentário gruda num cartão (Detach), colapsa.</td></tr>
+<tr><td>Lixeira</td><td class="st"><span class="tag ok">igual</span></td><td>Milanote: 7 dias de histórico, abas "por mim/por outros". Space: recuperável sem limite.</td></tr>
+<tr><td>Labels, reações, atribuição, menções, due date, sons de UX</td><td class="st"><span class="tag skip">pular</span></td><td>Colaboração. Due date pode voltar depois.</td></tr>
+</tbody></table></div>
+
+<h2>5. Ordem de implementação <small>todas feitas na v0.6</small></h2>
+<ol class="plan">
+<li><b>Menu de contexto do cartão</b> completo: Cut, Paste (em coluna), Paste styles, Rename, Group into column, Connect with lines, Convert note ⇄ document, column → board, Replace/Download image, Copy link address, Download SVG, Created/edited.</li>
+<li><b>Empurrar vizinhos</b> quando um cartão cresce (o comportamento que mais muda a sensação de "é o Milanote").</li>
+<li><b>Quick line</b> (alça de linha no cartão selecionado) e duplo clique na alça de largura.</li>
+<li><b>Atalhos</b>: ⌘X, ⌥` , ⌥W/A/S/D/H/V, ⌘⌥V, ⌘⌥⇧V/H, ⌘K, ⌘⇧U, ⌘⇧,/. (escala), ⌥↩, / (painel).</li>
+<li><b>Colar inteligente</b>: texto vira legenda, tabela vira Tabela, lista vira To-do.</li>
+<li><b>Cores</b>: paleta de 11 + custom + modo Background/Top strip; colunas na versão clara.</li>
+<li><b>Imagem</b>: corte na grade com toggle. <b>Markdown ao digitar</b> + checkbox na nota.</li>
+<li>Audio/Map como link (Spotify, SoundCloud, Google Maps), modos icon/card, menu Inserir, tabela avançada.</li>
+</ol>
+<h2>6. O que faltava após a v0.6 <small>resolvido na v0.7</small></h2>
+<div class="tw"><table><thead><tr><th>Item</th><th>Space</th><th>Como é no Milanote</th></tr></thead><tbody>
+<tr><td>Comentário preso a um cartão</td><td class="st"><span class="tag ok">igual</span></td><td>Comentário arrastado sobre um cartão fica anexado a ele (Detach solta).</td></tr>
+<tr><td>Biblioteca de ícones do board</td><td class="st"><span class="tag ok">igual</span></td><td>Ícones desenhados + imagem enviada. Space usa a biblioteca Lucide monocromática (decisão sua) + imagem.</td></tr>
+<tr><td>Arrastar vários cartões de dentro de uma coluna</td><td class="st"><span class="tag ok">igual</span></td><td>Seleção múltipla dentro da coluna arrasta junto.</td></tr>
+<tr><td>Barra de ferramentas personalizável (More)</td><td class="st"><span class="tag ok">igual</span></td><td>Escolher quais ferramentas aparecem na barra; o resto vai para "More".</td></tr>
+<tr><td>Documento em modal com barra lateral</td><td class="st"><span class="tag ok">igual</span></td><td>Editor de documento em tela grande com formatação na lateral.</td></tr>
+</tbody></table></div>
+<h2>7. Segunda passada do REA <small>áreas ainda não comparadas</small></h2>
+<p class="note">Fora da contagem: Table, Sketch e Draw (removidos por decisão sua) e tudo de conta/colaboração.</p>
+<div class="tw"><table><thead><tr><th>Área (arquivo no Milanote)</th><th>Space</th><th>Como é no Milanote</th></tr></thead><tbody>
+<tr><td>Busca (BoardSearchPanel)</td><td class="st"><span class="tag ok">igual</span></td><td>Com o campo vazio mostra os boards recentes; ao digitar, filtra o board atual (o que não bate fica apagado) e lista resultados de outros boards; navegação por setas.</td></tr>
+<tr><td>Voltar / avançar (⌘[ ⌘])</td><td class="st"><span class="tag ok">igual</span></td><td>Histórico de navegação entre boards, como num navegador.</td></tr>
+<tr><td>Apresentação (presentation/focusMode)</td><td class="st"><span class="tag ok">igual</span></td><td>Edição bloqueada; clicar num cartão amplia ele em tela cheia (modo foco); opções de esconder comentários.</td></tr>
+<tr><td>Exportar board (ExportPopupForBoard)</td><td class="st"><span class="tag ok">igual</span></td><td>Layout do board: PDF padrão, PDF alta qualidade, PNG. Documento linear (com ou sem sub-boards): Word, Markdown, texto simples. Baixar todos os arquivos (ZIP).</td></tr>
+<tr><td>Abrir arquivo (FilePreview / element modal)</td><td class="st"><span class="tag ok">igual</span></td><td>PDF, vídeo e imagem abrem num visualizador dentro do app, com download.</td></tr>
+<tr><td>Busca de imagens (ImageSearchPopup)</td><td class="st"><span class="tag miss">falta</span></td><td>Add image tem busca no Pexels, arrastar o resultado pro board. Precisa de internet (fica pro app de desktop).</td></tr>
+<tr><td>Quick Notes (workspaceToolsHeader/quickNotes)</td><td class="st"><span class="tag ok">igual</span></td><td>Lista de anotações rápidas acessível do topo, em qualquer board.</td></tr>
+<tr><td>Galeria de templates (boardTemplatePickerPopup)</td><td class="st"><span class="tag part">parcial</span></td><td>Galeria grande por categoria, com prévia. Os templates vêm do servidor do Milanote.</td></tr>
+</tbody></table></div>
+<h2>8. Rodada v0.7 — itens 1 a 10 <small>como cada um foi conferido no código</small></h2>
+<div class="tw"><table><thead><tr><th>Item</th><th>Space</th><th>Fonte no Milanote → o que o Space faz</th></tr></thead><tbody>
+<tr><td>1. Comentário anexado</td><td class="st"><span class="tag ok">igual</span></td><td>attachedComment/* + AttachModeHoverWatcher (espera 500 ms parado) + DetachCommentTool → arrastar comentário e segurar sobre o cartão anexa; balão na borda direita (x 100%, y 2rem); segue o cartão; ferramenta Comment no cartão; Detach e arrastar pra fora soltam.</td></tr>
+<tr><td>2. Vários cartões da coluna</td><td class="st"><span class="tag ok">igual</span></td><td>canvasDropResultFn (unscaledElementOffsetsMap) → seleção com Shift dentro da coluna arrasta junto, mantém a disposição ao soltar no quadro, entra em outra coluna na ordem.</td></tr>
+<tr><td>3. Busca</td><td class="st"><span class="tag ok">igual</span></td><td>BoardSearchPanel / BoardSearchResultEntry / boardSearchPopupUtils → resultados por board com caminho, contagem e até 5 trechos com destaque (+N more); vazio = recentes; marcadores de data; ordenar por Last viewed / Last modified / Relevance; setas + Enter; filtro do board atual apaga o que não bate, com barra "Showing results for".</td></tr>
+<tr><td>4. Voltar / avançar</td><td class="st"><span class="tag ok">igual</span></td><td>keyboardShortcuts (ctrl+[ / ctrl+]) + menu History do app → ⌘[ ⌘] (e Ctrl) e botões laterais do mouse.</td></tr>
+<tr><td>5. Apresentação</td><td class="st"><span class="tag ok">igual</span></td><td>PresentationModePopupPanelSection + focusMode → painel com Present e 3 chaves (Hide comments, Disable editing, Click a card to focus); foco amplia o cartão com animação; Esc fecha o foco, depois sai.</td></tr>
+<tr><td>6. Exportar</td><td class="st"><span class="tag ok">igual</span></td><td>ExportPopupForBoard → Current board layout (PDF padrão, PDF alta qualidade, PNG) · Linear document com "Include sub-boards" (Word .docx de verdade, Markdown, texto) · Download all files (ZIP com tamanho) · + Backup (só no Space).</td></tr>
+<tr><td>7. Visualizador de arquivo</td><td class="st"><span class="tag ok">igual</span></td><td>FileModal (PDF e texto em visualizador nativo; outros = detalhe) → duplo clique ou "Open File": PDF, texto, imagem, vídeo, áudio; demais mostram "No preview"; botão Download.</td></tr>
+<tr><td>8. Quick Notes</td><td class="st"><span class="tag ok">igual</span></td><td>quickNotes/QuickNotesPopup (quadro-raiz especial em lista) → botão no topo com contador, + Note, arrastar cartões pra dentro e pra fora, igual em qualquer board.</td></tr>
+<tr><td>9. Documento</td><td class="st"><span class="tag ok">igual</span></td><td>DocumentModal + Header + Sidebar → modal alto, título no centro, Export à direita (PDF, Word, Markdown, texto), barra de texto ao lado; salva enquanto escreve.</td></tr>
+<tr><td>10. Barra personalizável</td><td class="st"><span class="tag ok">igual</span></td><td>primaryToolsConstants + collapseItemsToFit + MoreTool + ToolbarScreen → escolher ferramentas (Customize toolbar…, também no clique direito da barra); desligadas e as que não cabem na altura vão pro More (arrastáveis).</td></tr>
+<tr><td>Busca de imagens (Pexels)</td><td class="st"><span class="tag miss">falta</span></td><td>Precisa de internet e chave de API — entra no app de Mac.</td></tr>
+<tr><td>Galeria de templates</td><td class="st"><span class="tag part">parcial</span></td><td>Os do Milanote vêm do servidor; refazer os principais à mão.</td></tr>
+</tbody></table></div>
+<p class="note">Ficam de fora por serem de conta/colaboração: synced copy, shortcut/alias de quadro, abrir em nova aba, template público, labels, reações, menções, due date, "deleted by others".</p>
+</div>

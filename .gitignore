@@ -1,0 +1,16 @@
+# saídas de build (geradas por build.py)
+space.html
+app/
+test/index.html
+test/check.js
+dist/
+# dependências
+node_modules/
+vendor/node_modules/
+# Rust / Tauri
+src-tauri/target/
+src-tauri/gen/
+# sistema
+.DS_Store
+Thumbs.db
+*.log

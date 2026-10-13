@@ -1,0 +1,16 @@
+{
+  "name": "space",
+  "version": "0.8.0",
+  "private": true,
+  "description": "Space — a personal, local-first boards app (Milanote-style) for references, links and images.",
+  "scripts": {
+    "build:web": "python3 build.py",
+    "tauri": "tauri",
+    "dev": "python3 build.py && tauri dev",
+    "build": "python3 build.py && tauri build",
+    "test": "node test/round2.mjs && node test/parity.mjs"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.8.0"
+  }
+}

@@ -1,0 +1,43 @@
+<div id="app">
+  <header id="hdr">
+    <div class="brand"><i></i><span>Space</span></div>
+    <nav id="crumbs"></nav>
+    <div id="title" contenteditable="true" spellcheck="false"></div>
+    <div class="spacer"></div>
+    <button class="hbtn" id="undo" title="Undo (⌘Z)" data-icon="undo"></button>
+    <button class="hbtn" id="redo" title="Redo (⌘⇧Z)" data-icon="redo"></button>
+    <button class="hbtn" id="qn-btn" title="Quick notes" data-icon="quicknotes"><span id="qn-count"></span></button>
+    <button class="hbtn" id="search" title="Search (⌘F)" data-icon="search"></button>
+    <button class="hbtn" id="templates" title="Templates" data-icon="template"></button>
+    <button class="hbtn" id="fit" title="Fit everything (Z)" data-icon="fit"></button>
+    <button class="hbtn" id="present" title="Presentation (⌘⌥P)" data-icon="present"></button>
+    <button class="hbtn" id="theme" title="Light/dark theme (⌘⇧D)" data-icon="moon"></button>
+    <button class="hbtn" id="io" title="Export / backup" data-icon="download"></button>
+    <button class="hbtn" id="trashbtn" title="Trash" data-icon="trash"></button>
+    <button class="hbtn" id="help" title="Shortcuts" data-icon="help"></button>
+    <button class="hbtn" id="inbox-btn" title="Unsorted" data-icon="panel"><span id="inbox-count"></span></button>
+  </header>
+
+  <aside id="tools"></aside>
+
+  <main id="stage"><div id="filterbar"><span>Showing results for <b class="fq"></b></span><span class="fn"></span><button class="fc">Clear</button></div>
+    <div id="world"></div>
+    <div id="marquee"></div>
+    <div id="empty"><div><b>Empty board</b>Double-click to create a note, drag a tool from the left, or start from a template.</div></div>
+    <div id="zoomhud"><button id="zout" title="Zoom − (⌘−)">−</button><button id="zpct" title="100% (⌘0)">100%</button><button id="zin" title="Zoom + (⌘+)">+</button></div>
+  </main>
+
+  <aside id="inbox">
+    <div class="ih"><span>Unsorted<small id="inbox-n"></small></span><button class="hbtn" id="inbox-close">Close</button></div>
+    <div class="il" id="inbox-list"></div>
+  </aside>
+  <button id="inbox-tab"><b id="inbox-tab-n">0</b> Unsorted</button>
+</div>
+<div id="ghost"></div>
+<div id="cmenu"></div>
+<div id="toast"></div>
+<div id="modal"><div class="box" id="modal-box"></div></div>
+<div id="lightbox"><img alt=""></div>
+<input type="file" id="filepick" accept="image/*" multiple hidden>
+<input type="file" id="anypick" multiple hidden>
+<input type="file" id="jsonpick" accept=".json,application/json" hidden>
