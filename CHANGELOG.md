@@ -1,6 +1,6 @@
 # Changelog
 
-## Próxima versão (dev)
+## Próxima versão (feat-space-braz)
 - (nada ainda)
 
 ## v0.9.7 — 2026-10-14

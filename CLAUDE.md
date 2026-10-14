@@ -30,8 +30,8 @@ npx tauri dev | npx tauri build
 - O preview no claude.ai bloqueia embeds do YouTube/Maps (`IS_HOSTED`); teste esses no app ou no `dist/Space.zip`.
 
 ## Branches (combinado com o Braz em 2026-10-14)
-- **`dev`**: todo trabalho novo. Commit e push na `dev`, publique o preview (artifact) para o Braz testar. Push na `dev` **não** gera instalador nem atualização.
-- **`main`**: só a versão estável. Quando o Braz disser que a versão está 100%: suba a versão (package.json, src-tauri/Cargo.toml, src-tauri/tauri.conf.json), feche a seção do CHANGELOG com o número e a data, faça merge da `dev` na `main` e push. O Actions publica a release e o app instalado oferece "Update".
+- **`feat-space-braz`**: todo trabalho novo. Commit e push na `feat-space-braz`, publique o preview (artifact) para o Braz testar. Push na `feat-space-braz` **não** gera instalador nem atualização.
+- **`main`**: só a versão estável. Quando o Braz disser que a versão está 100%: suba a versão (package.json, src-tauri/Cargo.toml, src-tauri/tauri.conf.json), feche a seção do CHANGELOG com o número e a data, faça merge da `feat-space-braz` na `main` e push. O Actions publica a release e o app instalado oferece "Update".
 - Nunca faça commit direto na `main`. No CHANGELOG, o que ainda não foi lançado fica em `## Próxima versão (dev)`.
 
 ## Publicar
