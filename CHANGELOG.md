@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.9.2 — 2026-10-14
+- Ícone do quadro virou um bloco na cor do quadro com ícone ou letra monocromático (branco nas cores escuras, escuro nas claras; sem cor = cinza). Resolve o quadro invisível dentro de colunas no tema escuro.
+
 ## v0.9.1 — 2026-10-13
 - **Ícones Heroicons v2 outline** (MIT, heroicons.com), escolha do Braz. Traço de 1,5px. Todos os 170 ícones do app vêm do Heroicons (sem mistura); onde não há desenho exato (alinhamento, recuo, citação, marcas como YouTube), usa o mais próximo da própria biblioteca.
 
