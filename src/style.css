@@ -926,3 +926,40 @@ svg.hi,svg.lu,.tool i svg.hi,.tool i svg.lu,.hbtn svg.hi,.hbtn svg.lu,.pop butto
 /* v0.9.4 — apresentação fora do header por enquanto (atalho ⌘⌥P continua); lixeira do header recebe cartões arrastados */
 #present{display:none}
 #trashbtn.over{background:var(--danger-c);color:#fff}
+/* v0.9.5 — header mais limpo (Fit e Unsorted saem; Z e a aba do canvas continuam), seletor de cor, templates no canto */
+#fit,#inbox-btn,#templates{display:none}
+.pop.cpick{width:236px;padding:10px;gap:10px;display:grid}
+.cpsv{position:relative;height:150px;border-radius:8px;background-image:linear-gradient(to top,#000,transparent),linear-gradient(to right,#fff,rgba(255,255,255,0));cursor:crosshair;touch-action:none}
+.cpsv i{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.4),0 1px 3px rgba(0,0,0,.4);pointer-events:none}
+.cphue{position:relative;height:12px;border-radius:999px;background:linear-gradient(90deg,#f00,#ff0 17%,#0f0 33%,#0ff 50%,#00f 67%,#f0f 83%,#f00);cursor:pointer;touch-action:none}
+.cphue i{position:absolute;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.35),0 1px 3px rgba(0,0,0,.35);pointer-events:none}
+.cprow{display:flex;align-items:center;gap:8px}
+.cpsw{width:26px;height:26px;border-radius:6px;box-shadow:inset 0 0 0 .5px rgba(0,0,0,.25);flex:none}
+.cphex{flex:1;min-width:0;height:28px;border-radius:6px;border:0;background:var(--control);color:var(--text);font:12px var(--mono);padding:0 8px;letter-spacing:.02em}
+.pop .cpeye{height:28px;width:28px;padding:0;justify-content:center;background:var(--control);border-radius:6px}
+.pop .cpeye svg{width:15px;height:15px}
+#tplp{position:fixed;right:24px;bottom:72px;width:300px;max-height:min(560px,calc(100vh - 160px));z-index:180;display:flex;flex-direction:column;border-radius:var(--r-panel);background:var(--glass-pop);-webkit-backdrop-filter:var(--glass-filter);backdrop-filter:var(--glass-filter);box-shadow:var(--shadow-float);animation:pop .2s cubic-bezier(.19,1,.22,1)}
+#tplp .tph{display:flex;align-items:center;justify-content:space-between;padding:14px 12px 8px 16px}
+#tplp h3{margin:0;font-size:14px;font-weight:600}
+#tplp .tpx{width:26px;height:26px;border-radius:6px;display:grid;place-items:center;color:var(--text-2)}
+#tplp .tpx:hover{background:var(--control)}
+#tplp .tpx svg{width:15px;height:15px}
+#tplp .tpl-list{overflow-y:auto;padding:2px 8px 8px;display:grid;gap:2px}
+#tplp .tpi{display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;text-align:left;position:relative}
+#tplp .tpi:hover{background:var(--control)}
+#tplp .tpi.on{background:var(--select-fill);box-shadow:inset 0 0 0 1.5px var(--accent-c)}
+#tplp .tpth{width:54px;height:40px;border-radius:6px;background:var(--canvas);display:flex;gap:3px;padding:5px;flex:none;box-shadow:inset 0 0 0 .5px var(--hairline)}
+#tplp .tpth i{flex:1;border-radius:2px;background:var(--control-hover)}
+#tplp .tpth i.c{background:var(--column);box-shadow:inset 0 0 0 .5px var(--hairline)}
+#tplp .tpth i.m{background:var(--text-3);opacity:.55}
+#tplp .tpm{min-width:0;display:flex;flex-direction:column;gap:1px}
+#tplp .tpm b{font-size:13px;font-weight:600}
+#tplp .tpm small{font-size:11.5px;color:var(--text-2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#tplp .tpi em{position:absolute;top:6px;right:8px;font-style:normal;font-size:10px;color:var(--accent-c)}
+#tplp .tpf{padding:10px 12px 12px;border-top:.5px solid var(--separator)}
+#tplp .tpuse{width:100%;height:32px;border-radius:980px;background:var(--action);color:var(--on-action);font-weight:600;font-size:13px}
+#tplp .tpuse:hover{filter:brightness(1.1)}
+#tplp .tpuse.pulse{animation:tplpulse .5s ease}
+@keyframes tplpulse{0%{transform:scale(1)}40%{transform:scale(1.05);box-shadow:0 0 0 6px color-mix(in srgb,var(--action) 35%,transparent)}100%{transform:scale(1)}}
+body.tpl-preview #world{opacity:.92}
+body.tpl-preview #stage{cursor:default}

@@ -408,3 +408,54 @@ async function renderPdfInto(box, blob, url, name, modalEl){
     for(let i=1;i<=Math.min(doc.numPages,80);i++){ if(!box.isConnected) return; const cv=await renderPdfPage(doc,i,w*dpr); cv.style.width=w+'px'; cv.className='fvpage'; box.appendChild(cv); }
     if(doc.numPages>80){ const more=document.createElement('p'); more.className='fvload'; more.textContent=`Showing 80 of ${doc.numPages} pages. Download to see the rest.`; box.appendChild(more); }
   }catch(err){ console.warn('pdf view', err); box.outerHTML=`<iframe class="fvpdf" src="${url}" title="${esc(name)}"></iframe>`; } }
+
+/* ---- seletor de cor próprio (abre ao lado de quem chamou; o nativo abria longe e, no Mac, numa janela solta) ---- */
+function hexToHsv(hex){ const m=/^#?([0-9a-f]{6})$/i.exec(hex||''); if(!m) return {h:210,s:.7,v:.95}; const n=parseInt(m[1],16); const r=(n>>16&255)/255,g=(n>>8&255)/255,b=(n&255)/255; const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn; let h=0; if(d){ h= mx===r?((g-b)/d)%6 : mx===g?(b-r)/d+2 : (r-g)/d+4; h*=60; if(h<0) h+=360; } return {h, s:mx?d/mx:0, v:mx}; }
+function hsvToHex({h,s,v}){ const f=n=>{ const k=(n+h/60)%6; return v - v*s*Math.max(0,Math.min(k,4-k,1)); }; return '#'+[f(5),f(3),f(1)].map(x=>Math.round(x*255).toString(16).padStart(2,'0')).join(''); }
+let cpick=null;
+function closeColorPicker(){ if(!cpick) return; const c=cpick; cpick=null; c.el.remove(); c.onDone?.(c.hex); }
+function openColorPicker(x,y,initial,{onInput,onDone}={}){
+  closeColorPicker(); let hsv=hexToHsv(initial); const el=document.createElement('div'); el.className='pop cpick';
+  el.innerHTML=`<div class="cpsv"><i></i></div><div class="cphue"><i></i></div><div class="cprow"><span class="cpsw"></span><input class="cphex" type="text" maxlength="7" spellcheck="false">${window.EyeDropper?`<button class="cpeye" title="Pick from screen">${ICONS.pipette}</button>`:''}</div>`;
+  document.body.appendChild(el); const W=el.offsetWidth,H=el.offsetHeight; el.style.left=Math.max(8,Math.min(innerWidth-W-8,x))+'px'; el.style.top=Math.max(8,Math.min(innerHeight-H-8,y))+'px';
+  const sv=el.querySelector('.cpsv'), hue=el.querySelector('.cphue'), hex=el.querySelector('.cphex'), sw=el.querySelector('.cpsw');
+  const paint=(fromInput)=>{ const c=hsvToHex(hsv); cpick.hex=c; sv.style.backgroundColor=hsvToHex({h:hsv.h,s:1,v:1}); sv.querySelector('i').style.left=(hsv.s*100)+'%'; sv.querySelector('i').style.top=((1-hsv.v)*100)+'%'; hue.querySelector('i').style.left=(hsv.h/360*100)+'%'; sw.style.background=c; if(!fromInput) hex.value=c.toUpperCase(); onInput?.(c); };
+  const drag=(area,fn)=>area.addEventListener('pointerdown',ev=>{ ev.preventDefault(); area.setPointerCapture(ev.pointerId); const mv=e2=>{ const r=area.getBoundingClientRect(); fn(Math.max(0,Math.min(1,(e2.clientX-r.left)/r.width)), Math.max(0,Math.min(1,(e2.clientY-r.top)/r.height))); paint(); }; mv(ev); area.onpointermove=mv; area.onpointerup=()=>{ area.onpointermove=null; }; });
+  drag(sv,(fx,fy)=>{ hsv.s=fx; hsv.v=1-fy; }); drag(hue,(fx)=>{ hsv.h=fx*360; });
+  hex.addEventListener('input',()=>{ const v=hex.value.trim(); if(/^#?[0-9a-f]{6}$/i.test(v)){ hsv=hexToHsv(v.startsWith('#')?v:'#'+v); paint(true); } });
+  hex.addEventListener('keydown',ev=>{ if(ev.key==='Enter'){ ev.preventDefault(); closeColorPicker(); } });
+  el.querySelector('.cpeye')?.addEventListener('click', async()=>{ try{ const r=await new window.EyeDropper().open(); hsv=hexToHsv(r.sRGBHex); paint(); }catch{} });
+  el.addEventListener('pointerdown',ev=>ev.stopPropagation());
+  cpick={el,hex:hsvToHex(hsv),onDone}; paint();
+}
+document.addEventListener('pointerdown',ev=>{ if(cpick && !cpick.el.contains(ev.target)) closeColorPicker(); },true);
+document.addEventListener('keydown',ev=>{ if(ev.key==='Escape' && cpick){ ev.preventDefault(); ev.stopPropagation(); closeColorPicker(); } },true);
+// fundo do quadro: abre ao lado do item "Choose Custom Color"
+cmenu.addEventListener('click', ev=>{ const b=ev.target.closest('button[data-a=bgcustom]'); if(!b) return; ev.stopImmediatePropagation(); const r=b.getBoundingClientRect(); const fr=b.closest('.flyout,.sub')?.getBoundingClientRect()||r; cmenu.style.display='none';
+  const bd=S.els[S.cur]; commit(); openColorPicker(Math.max(fr.right,r.right)+6, r.top-8, /^#/.test(bd.content.bg||'')?bd.content.bg:'#39414a', { onInput:c=>{ bd.content.bg=c; applyBoardBg(); }, onDone:()=>save() }); }, true);
+// cor personalizada do cartão: abre ao lado do painel de cores
+document.addEventListener('click', ev=>{ const cu=ev.target.closest('.colorpop .sw.cu'); if(!cu) return; ev.preventDefault(); ev.stopPropagation(); const pop=cu.closest('.pop'); const pr=pop.getBoundingClientRect(); const mode=pop.querySelector('.cmodes button.on')?.dataset.m || 'strip'; const els=selEls(); if(!els.length) return; const cur=mode==='bg'?els[0].bg:els[0].color; closePop(); commit();
+  openColorPicker(pr.right+6, pr.top, /^#/.test(cur||'')?cur:'#4ebafd', { onInput:c=>{ els.forEach(e=>{ if(mode==='bg') e.bg=c; else e.color=c; refreshEl(e.id); }); }, onDone:()=>{ els.forEach(e=>touch(e.id)); render(); save(); } }); }, true);
+
+/* ---- seletor de templates no canto inferior direito (Milanote: DesktopBoardTemplatePickerPopup — aparece em quadro vazio, prévia ao vivo) ---- */
+let tplPrev=null, tplSel=null;
+function tplCleanEls(){ if(!tplPrev) return S.els; const o={}; for(const k in S.els){ if(!tplPrev.ids.has(k)) o[k]=S.els[k]; } return o; }
+function tplClearPreview(){ if(!tplPrev) return; tplPrev.ids.forEach(id=>delete S.els[id]); tplPrev=null; document.body.classList.remove('tpl-preview'); }
+function tplPreview(tpl){ tplClearPreview(); if(!tpl||tpl.id==='blank'){ render(); return; } const before=new Set(Object.keys(S.els)); applyTemplate(tpl,S.cur); const ids=new Set(Object.keys(S.els).filter(k=>!before.has(k))); tplPrev={board:S.cur,ids}; document.body.classList.add('tpl-preview'); render(); setTimeout(fitAll,20); }
+function tplBoardEmpty(){ return !canvasKids(S.cur).some(e=>!tplPrev?.ids.has(e.id)) && !inboxKids(S.cur).length; }
+function tplPickerCheck(){ if(tplPrev && tplPrev.board!==S.cur){ tplPrev.ids.forEach(id=>delete S.els[id]); tplPrev=null; tplSel=null; document.body.classList.remove('tpl-preview'); }
+  const show = S.els[S.cur] && tplBoardEmpty() && !S.present && !(S.meta.tplDismissed||{})[S.cur];
+  const el=$('#tplp'); if(!show){ el?.remove(); return; } if(el && el.dataset.board===S.cur) return; el?.remove(); renderTplPicker(); }
+function renderTplPicker(){ const p=document.createElement('div'); p.id='tplp'; p.dataset.board=S.cur;
+  const list=[{id:'blank',name:'Empty board',desc:'Start from scratch.',th:''}, ...TEMPLATES.filter(t=>t.id!=='blank')];
+  p.innerHTML=`<div class="tph"><h3>Choose a template</h3><button class="tpx" title="Close">${ICONS.x}</button></div><div class="tpl-list">${list.map((t,i)=>`<button class="tpi${(tplSel||'blank')===t.id?' on':''}" data-t="${t.id}"><span class="tpth">${t.th||'<i class="s"></i>'}</span><span class="tpm"><b>${esc(t.name)}</b><small>${esc(t.desc||'')}</small></span>${i===1?'<em>Top pick</em>':''}</button>`).join('')}</div><div class="tpf"><button class="tpuse">${(tplSel&&tplSel!=='blank')?'Use this template':'Continue'}</button></div>`;
+  p.addEventListener('pointerdown',ev=>ev.stopPropagation());
+  document.body.appendChild(p);
+  const dismiss=()=>{ tplClearPreview(); tplSel=null; (S.meta.tplDismissed||(S.meta.tplDismissed={}))[S.cur]=1; save(); p.remove(); render(); };
+  p.querySelector('.tpx').onclick=dismiss;
+  p.querySelectorAll('.tpi').forEach(b=>b.onclick=()=>{ tplSel=b.dataset.t; p.querySelectorAll('.tpi').forEach(x=>x.classList.toggle('on',x===b)); p.querySelector('.tpuse').textContent=tplSel==='blank'?'Continue':'Use this template'; tplPreview(TEMPLATES.find(t=>t.id===tplSel)); });
+  p.querySelector('.tpuse').onclick=()=>{ const tpl=TEMPLATES.find(t=>t.id===tplSel); tplClearPreview(); if(tpl && tpl.id!=='blank'){ commit(); applyTemplate(tpl,S.cur); const bd=S.els[S.cur]; if(!bd.content.title) bd.content.title=tpl.name; } tplSel=null; (S.meta.tplDismissed||(S.meta.tplDismissed={}))[S.cur]=1; p.remove(); render(); save(); setTimeout(fitAll,30); };
+}
+// durante a prévia o quadro não aceita edição: clicar nele pulsa o botão
+stage.addEventListener('pointerdown',ev=>{ if(!tplPrev) return; ev.stopImmediatePropagation(); ev.preventDefault(); const b=document.querySelector('#tplp .tpuse'); if(b){ b.classList.remove('pulse'); void b.offsetWidth; b.classList.add('pulse'); } },true);
+stage.addEventListener('dblclick',ev=>{ if(tplPrev){ ev.stopImmediatePropagation(); ev.preventDefault(); } },true);

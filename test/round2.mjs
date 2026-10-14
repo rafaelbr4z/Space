@@ -304,6 +304,30 @@ await sel([]); const dc1 = await center(d1); const tb = await ev(() => { const r
 await p.mouse.move(dc1.x, dc1.y); await p.mouse.down(); await p.mouse.move(tb.x, tb.y, { steps: 10 }); await p.mouse.up(); await p.waitForTimeout(100);
 ok('dragging a card onto the header trash deletes it', await ev(id => window.__space.S.els[id].trashed === true, d1));
 
+// ===== template picker + color picker + header
+await fresh(); await p.waitForTimeout(100);
+ok('header has no Fit, Unsorted or Templates buttons', await ev(() => ['#fit', '#inbox-btn', '#templates'].every(s => getComputedStyle(document.querySelector(s)).display === 'none')));
+ok('empty board shows template picker bottom-right', await ev(() => { const t = document.querySelector('#tplp'); if (!t) return false; const r = t.getBoundingClientRect(); return r.right > innerWidth - 40 && r.bottom > innerHeight - 120 && t.querySelector('h3').textContent === 'Choose a template'; }));
+await p.click('#tplp .tpi[data-t=moodboard]'); await p.waitForTimeout(150);
+ok('selecting a template previews it on the board', await ev(() => window.__space.canvasKids(window.__space.S.cur).length > 3 && document.body.classList.contains('tpl-preview') && document.querySelector('#tplp .tpuse').textContent === 'Use this template'));
+await p.click('#tplp .tpi[data-t=week]'); await p.waitForTimeout(150);
+ok('switching template replaces the preview', await ev(() => window.__space.canvasKids(window.__space.S.cur).filter(e => e.type === 'column').length === 7));
+await p.click('#tplp .tpuse'); await p.waitForTimeout(150);
+ok('Use this template keeps it and closes picker', await ev(() => !document.querySelector('#tplp') && !document.body.classList.contains('tpl-preview') && window.__space.canvasKids(window.__space.S.cur).filter(e => e.type === 'column').length === 7));
+await p.keyboard.press('Control+z'); await p.waitForTimeout(100);
+ok('undo removes the applied template', await ev(() => window.__space.canvasKids(window.__space.S.cur).length === 0));
+await fresh(); await p.waitForTimeout(100); await p.click('#tplp .tpx'); await p.waitForTimeout(80);
+ok('closing picker dismisses it for that board', await ev(() => !document.querySelector('#tplp')));
+await p.click('#stage', { button: 'right', position: { x: 700, y: 400 } }); await p.waitForTimeout(80);
+await p.hover('#cmenu .sub > button'); await p.waitForTimeout(80);
+const ccm = await ev(() => { const r = document.querySelector('#cmenu [data-a=bgcustom]').getBoundingClientRect(); return { x: r.left + 10, y: r.top + 5, right: r.right, top: r.top }; });
+await p.mouse.click(ccm.x, ccm.y); await p.waitForTimeout(100);
+ok('Choose Custom Color opens picker next to the menu item', await ev(c => { const k = document.querySelector('.cpick'); if (!k) return false; const r = k.getBoundingClientRect(); return Math.abs(r.top - (c.top - 8)) < 40 && r.left >= c.right - 4; }, ccm));
+const svb = await ev(() => { const r = document.querySelector('.cpick .cpsv').getBoundingClientRect(); return { x: r.left + r.width * 0.8, y: r.top + r.height * 0.3 }; });
+await p.mouse.click(svb.x, svb.y); await p.waitForTimeout(60);
+ok('picking a color changes board background live', await ev(() => /^#/.test(window.__space.S.els[window.__space.S.cur].content.bg || '') && document.querySelector('#stage').style.backgroundColor !== ''));
+await p.keyboard.press('Escape');
+
 ok('no page errors', errs.length === 0, errs.join(' | '));
 await p.screenshot({ path: process.env.SHOT || '/tmp/round2.png' });
 const fails = res.filter(r => r[0] === 'FAIL');

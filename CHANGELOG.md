@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.9.5 — 2026-10-14
+- **Templates no canto inferior direito** (como o Milanote): em quadro vazio aparece "Choose a template"; clicar num template mostra a prévia ao vivo no quadro, "Use this template" aplica (com desfazer), o X dispensa para aquele quadro. Criar um quadro novo não abre mais o modal de templates.
+- **Seletor de cor próprio**: "Choose Custom Color" (fundo do quadro) e a cor personalizada dos cartões abrem ao lado de onde foram chamados, com área de cor, matiz, hex e conta-gotas.
+- Header mais limpo: saíram os botões Fit (atalho Z continua), Unsorted (a aba no canvas continua) e Templates.
+
 ## v0.9.4 — 2026-10-14
 - **Distribute** de verdade: Horizontally coloca os cartões selecionados numa linha com espaçamento igual (Vertically, numa coluna). Usa o espaço que já existe entre eles quando dá; senão, 20px.
 - Seleção de vários cartões mostra só **Distribute** (a ferramenta Alignment saiu; alinhar texto continua no modo de texto).
