@@ -914,3 +914,12 @@ svg.hi,svg.lu,.tool i svg.hi,.tool i svg.lu,.hbtn svg.hi,.hbtn svg.lu,.pop butto
 .el.board.bc-light .ico{color:rgba(0,0,0,.78)}
 .el.board .ico.gl svg.hi{stroke-width:1.6}
 .el.column .items .el.board .ico{box-shadow:0 0 0 .5px var(--hairline)}
+/* v0.9.3 — prévia de PDF */
+.el.file .fpv{position:relative;background:#fff;border-bottom:.5px solid var(--separator);max-height:460px;overflow:hidden;border-radius:var(--r-card) var(--r-card) 0 0}
+.el.file .fpv img{display:block;width:100%;object-fit:cover;object-position:top}
+.el.file .fpv .fpn{position:absolute;right:8px;bottom:8px;padding:2px 8px;border-radius:980px;background:rgba(0,0,0,.6);color:#fff;font-size:11px}
+.el.file .fpph{height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#86868b;font-size:12px;background:var(--control)}
+.el.file .fpph svg{width:30px;height:30px}
+#fview .fvpages{width:100%;height:100%;overflow:auto;display:flex;flex-direction:column;align-items:center;gap:16px;padding:24px;box-sizing:border-box;align-self:stretch}
+#fview .fvpage{display:block;max-width:100%;height:auto;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.3);border-radius:2px}
+#fview .fvload{color:var(--text-2);font-size:13px;margin:40px 0}

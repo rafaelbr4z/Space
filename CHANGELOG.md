@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.9.3 — 2026-10-14
+- **Prévia de PDF:** o cartão do PDF mostra a primeira página (com o número de páginas) e o visualizador mostra todas as páginas, roláveis (pdf.js, também offline no app).
+
 ## v0.9.2 — 2026-10-14
 - Ícone do quadro virou um bloco na cor do quadro com ícone ou letra monocromático (branco nas cores escuras, escuro nas claras; sem cor = cinza). Resolve o quadro invisível dentro de colunas no tema escuro.
 

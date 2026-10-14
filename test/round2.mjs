@@ -271,6 +271,20 @@ tn10 = await toolNames();
 ok('short window auto-collapses tools into More', tn10.includes('More') && !tn10.includes('Heading') && await ev(() => { const t = document.querySelector('#tools'); return t.scrollHeight <= t.clientHeight + 1; }), tn10.join('|'));
 await p.setViewportSize({ width: 1400, height: 900 }); await p.waitForTimeout(100);
 
+// ===== PDF preview
+await fresh();
+const pdfB64 = (await import('fs')).readFileSync('/tmp/claude-0/test.pdf').toString('base64');
+await ev(async b64 => { const bin = Uint8Array.from(atob(b64), c => c.charCodeAt(0)); const blob = new Blob([bin], { type: 'application/pdf' }); await new Promise((res, rej) => { const rq = indexedDB.open('space-db'); rq.onsuccess = () => { const tx = rq.result.transaction('blobs', 'readwrite'); tx.objectStore('blobs').put(blob, 'pdf-test'); tx.oncomplete = res; tx.onerror = rej; }; }); }, pdfB64);
+const pf = await mkAt('file', 120, 80, { content: { blobId: 'pdf-test', name: 'Lumina treatment.pdf', kind: 'other', size: 4000 } });
+await p.waitForFunction(id => !!window.__space.S.els[id].content.thumb, pf, { timeout: 15000 }).catch(() => {});
+await p.waitForTimeout(400);
+ok('PDF card shows first-page preview', await ev(id => { const e = window.__space.S.els[id]; const im = document.querySelector(`#world .el[data-id="${id}"] .fpv img`); return !!e.content.thumb && e.content.pages === 3 && !!im && im.naturalWidth > 100; }, pf), await ev(id => JSON.stringify(window.__space.S.els[id].content), pf));
+const pfc = await ev(id => { const r = document.querySelector(`#world .el[data-id="${id}"] .fpv`).getBoundingClientRect(); return { x: r.left + 60, y: r.top + 60 }; }, pf);
+await p.mouse.dblclick(pfc.x, pfc.y); await p.waitForTimeout(1500);
+ok('PDF opens in viewer with all pages rendered', await ev(() => document.querySelectorAll('#fview .fvpage').length === 3 && /3 pages/.test(document.querySelector('#fview .fvt small').textContent)));
+await p.screenshot({ path: '/tmp/claude-0/pdfview.png' }); await p.keyboard.press('Escape'); await p.waitForTimeout(200); await p.screenshot({ path: '/tmp/claude-0/pdfcard.png', clip: { x: 0, y: 0, width: 900, height: 900 } });
+await p.keyboard.press('Escape');
+
 ok('no page errors', errs.length === 0, errs.join(' | '));
 await p.screenshot({ path: process.env.SHOT || '/tmp/round2.png' });
 const fails = res.filter(r => r[0] === 'FAIL');

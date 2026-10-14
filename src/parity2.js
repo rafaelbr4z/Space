@@ -271,6 +271,7 @@ async function openFileModal(e){
   const body=m.querySelector('.fvc');
   if(!url) body.innerHTML=`<div class="fvnone">${ICONS.file}<p>File not available on this device.</p></div>`;
   else if(isImg) body.innerHTML=`<img alt="" src="${url}">`;
+  else if(isPdf && blob){ body.innerHTML=`<div class="fvpages"><div class="fvload">Loading pages…</div></div>`; renderPdfInto(body.querySelector('.fvpages'), blob, url, name, m); }
   else if(isPdf) body.innerHTML=`<iframe class="fvpdf" src="${url}" title="${esc(name)}"></iframe>`;
   else if(isVid) body.innerHTML=`<video src="${url}" controls autoplay playsinline></video>`;
   else if(isAud) body.innerHTML=`<div class="fvaud">${ICONS.faudio||''}<audio src="${url}" controls autoplay></audio></div>`;
@@ -383,3 +384,27 @@ function openToolbarSettings(){
 }
 window.addEventListener('resize', ()=>{ if(S.mode==='create') renderTools(); });
 $('#tools').addEventListener('contextmenu', ev=>{ if(S.mode!=='create') return; ev.preventDefault(); ev.stopPropagation(); closePop(); const p=document.createElement('div'); p.className='pop tbctx'; p.innerHTML=`<button>${ICONS.sliders||''}<span>Customize toolbar…</span></button>`; document.body.appendChild(p); p.style.left=ev.clientX+'px'; p.style.top=ev.clientY+'px'; p.addEventListener('pointerdown', e=>e.stopPropagation()); p.querySelector('button').onclick=()=>{ closePop(); openToolbarSettings(); }; setTimeout(()=>document.addEventListener('pointerdown', ()=>p.remove(), {once:true}),0); });
+
+/* ---- PDF: miniatura da 1ª página no cartão + páginas no visualizador (pdf.js; Milanote mostra a prévia do PDF) ---- */
+const PDFJS='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js', PDFJS_W='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let pdfReady=null;
+function loadPdfJs(){ if(!pdfReady) pdfReady=(async()=>{ await loadScript(PDFJS); await loadScript(PDFJS_W); const L=window.pdfjsLib; L.GlobalWorkerOptions.workerSrc = window.__SPACE_APP ? 'libs/pdf.worker.min.js' : PDFJS_W; return L; })().catch(err=>{ pdfReady=null; throw err; }); return pdfReady; }
+const isPdfFile=c=>/\.pdf$/i.test(c?.name||'')||/pdf/i.test(c?.mime||'');
+async function pdfOpen(blob){ const L=await loadPdfJs(); return L.getDocument({data:new Uint8Array(await blob.arrayBuffer()), isEvalSupported:false}).promise; }
+async function renderPdfPage(doc,n,width){ const pg=await doc.getPage(n); const v1=pg.getViewport({scale:1}); const vp=pg.getViewport({scale:width/v1.width}); const cv=document.createElement('canvas'); cv.width=Math.round(vp.width); cv.height=Math.round(vp.height); await pg.render({canvasContext:cv.getContext('2d'),viewport:vp}).promise; return cv; }
+const pdfThumbBusy=new Set();
+async function ensurePdfThumb(e){ const c=e.content; if(c.thumb||c.thumbFail||pdfThumbBusy.has(e.id)||!c.blobId) return; pdfThumbBusy.add(e.id);
+  try{ const b=await getBlob(c.blobId); if(!b) return; const doc=await pdfOpen(b); c.pages=doc.numPages; const cv=await renderPdfPage(doc,1,680); const jpg=await new Promise(r=>cv.toBlob(r,'image/jpeg',.88)); const id=uid(); await putBlob(id,jpg); c.thumb=id; c.thumbRatio=cv.height/cv.width; save(); if(S.els[e.id]) refreshEl(e.id); }
+  catch(err){ console.warn('pdf preview', err); c.thumbFail=true; }
+  finally{ pdfThumbBusy.delete(e.id); } }
+function decoratePdf(n,e){ const c=e.content; if(c.icon || !isPdfFile(c)) return; n.classList.add('pdf');
+  const fr=n.querySelector('.fr'); if(!fr) return; const pv=document.createElement('div'); pv.className='fpv'; pv.title='Double-click to open';
+  if(c.thumb){ pv.innerHTML=`<img alt="" draggable="false">${c.pages>1?`<span class="fpn">${c.pages} pages</span>`:''}`; if(c.thumbRatio) pv.querySelector('img').style.aspectRatio=`1/${c.thumbRatio}`; blobUrl(c.thumb).then(u=>{ const im=pv.querySelector('img'); if(u&&im) im.src=u; }); }
+  else { pv.innerHTML=`<div class="fpph">${ICONS.file}<span>${c.thumbFail?'No preview':'PDF'}</span></div>`; if(!c.thumbFail) setTimeout(()=>ensurePdfThumb(e),30); }
+  fr.parentNode.insertBefore(pv, fr); const fd=n.querySelector('.fdoc'); if(fd && !fd.innerHTML.trim()) fd.innerHTML=ICONS.ftext||ICONS.file; }
+async function renderPdfInto(box, blob, url, name, modalEl){
+  try{ const doc=await pdfOpen(blob); box.innerHTML=''; const sub=modalEl?.querySelector('.fvt small'); if(sub) sub.textContent=[sub.textContent, doc.numPages+(doc.numPages===1?' page':' pages')].filter(Boolean).join(' · ');
+    const w=Math.min(900, box.clientWidth-48||860), dpr=Math.min(2, window.devicePixelRatio||1);
+    for(let i=1;i<=Math.min(doc.numPages,80);i++){ if(!box.isConnected) return; const cv=await renderPdfPage(doc,i,w*dpr); cv.style.width=w+'px'; cv.className='fvpage'; box.appendChild(cv); }
+    if(doc.numPages>80){ const more=document.createElement('p'); more.className='fvload'; more.textContent=`Showing 80 of ${doc.numPages} pages. Download to see the rest.`; box.appendChild(more); }
+  }catch(err){ console.warn('pdf view', err); box.outerHTML=`<iframe class="fvpdf" src="${url}" title="${esc(name)}"></iframe>`; } }

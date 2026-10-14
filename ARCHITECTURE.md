@@ -79,7 +79,7 @@ No app de desktop, o IndexedDB fica dentro do armazenamento do WebView, ligado �
 - Plugins: `dialog` + `fs` (salvar exportações e downloads com "Salvar como…"), `opener` (links externos no navegador padrão).
 - `desktop.js`: `appSave(nome, dados)` é usado por `saveOut`, `downloadFile` e pelo visualizador; links `http(s)` e `window.open` vão para `opener.openUrl`.
 - `disable_drag_drop_handler()` deixa o arrastar de arquivos do Finder chegar na página.
-- Libs de export (html2canvas, jsPDF, JSZip) são carregadas de `app/libs/` quando `window.__SPACE_APP` é verdadeiro (`loadScript`), senão do cdnjs.
+- Libs de export e PDF (html2canvas, jsPDF, JSZip, pdf.js 3.11.174) são carregadas de `app/libs/` quando `window.__SPACE_APP` é verdadeiro (`loadScript`), senão do cdnjs.
 
 O CI (`build.yml`) instala Node, Python e Rust, roda `build.py` e `tauri-action`. Mac: alvo `aarch64-apple-darwin` (Apple Silicon). O app não é assinado nem notarizado (ver README para abrir).
 
