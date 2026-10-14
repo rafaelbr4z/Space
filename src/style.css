@@ -803,3 +803,102 @@ body.docmode #tools{overflow-y:auto;scrollbar-width:none}
 .pop.ppop .pbtn:hover{background:radial-gradient(120% 75% at 50% 112%,var(--g-caustic),transparent 70%),linear-gradient(180deg,var(--g-top),transparent 45%),var(--gb-fill);filter:brightness(1.1)}
 /* painéis grandes: borda mais discreta (como a placa de fundo da referência); pílulas pequenas mantêm o reflexo forte */
 #tools::before,#inbox::before,#qn::before,.pop::before,#modal .box::before,#cmenu::before,#cmenu .flyout::before{opacity:.6}
+
+/* =====================================================================
+   v0.9 — Space Apple (design system unificado a partir dos estilos Apple do Refero)
+   Princípios: superfícies tonais em vez de sombras; vidro plano e translúcido (sem brilho na borda);
+   um azul só para ação/seleção; SF Pro com tracking negativo; pílulas para botões; ícones de linha monocromáticos.
+   Fonte única dos valores: o design system "Space Apple" (tokens.json). Tema escuro primeiro.
+   ===================================================================== */
+:root{
+  /* claro */
+  --canvas:#f5f5f7; --surface:#ffffff; --column:#ebebef; --control:#e8e8ed; --control-hover:#dcdce1;
+  --glass-bar:rgba(250,250,252,.72); --glass-pop:rgba(255,255,255,.9); --hairline:rgba(0,0,0,.1); --separator:rgba(0,0,0,.08);
+  --text:#1d1d1f; --text-2:#6e6e73; --text-3:#86868b; --label:rgba(0,0,0,.56);
+  --accent-c:#0071e3; --action:#0071e3; --on-action:#ffffff; --focus:#0071e3; --select-fill:rgba(0,113,227,.12);
+  --danger-c:#e30000; --success:#248a3d; --grid-dot:rgba(0,0,0,.13);
+  --shadow-card:0 2px 8px rgba(0,0,0,.08),0 0 2px rgba(0,0,0,.1);
+  --shadow-float:0 0 0 .5px rgba(0,0,0,.08),0 12px 40px rgba(0,0,0,.14);
+  --shadow-lift-c:0 0 0 .5px rgba(0,0,0,.08),0 18px 48px rgba(0,0,0,.2);
+  --glass-filter:blur(20px) saturate(180%);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --canvas:#141415; --surface:#1d1d1f; --column:#1b1b1d; --control:#333336; --control-hover:#424245;
+  --glass-bar:rgba(29,29,31,.72); --glass-pop:rgba(44,44,46,.88); --hairline:rgba(134,134,139,.3); --separator:rgba(255,255,255,.08);
+  --text:#f5f5f7; --text-2:#a1a1a6; --text-3:#6e6e73; --label:rgba(255,255,255,.8);
+  --accent-c:#2997ff; --action:#0071e3; --on-action:#ffffff; --focus:#2997ff; --select-fill:rgba(41,151,255,.16);
+  --danger-c:#ff453a; --success:#30d158; --grid-dot:rgba(255,255,255,.09);
+  --shadow-card:0 0 0 .5px rgba(255,255,255,.06),0 1px 3px rgba(0,0,0,.4);
+  --shadow-float:0 0 0 .5px rgba(255,255,255,.1),0 12px 40px rgba(0,0,0,.45);
+  --shadow-lift-c:0 0 0 .5px rgba(255,255,255,.12),0 18px 48px rgba(0,0,0,.55);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --canvas:#141415; --surface:#1d1d1f; --column:#1b1b1d; --control:#333336; --control-hover:#424245;
+  --glass-bar:rgba(29,29,31,.72); --glass-pop:rgba(44,44,46,.88); --hairline:rgba(134,134,139,.3); --separator:rgba(255,255,255,.08);
+  --text:#f5f5f7; --text-2:#a1a1a6; --text-3:#6e6e73; --label:rgba(255,255,255,.8);
+  --accent-c:#2997ff; --action:#0071e3; --on-action:#ffffff; --focus:#2997ff; --select-fill:rgba(41,151,255,.16);
+  --danger-c:#ff453a; --success:#30d158; --grid-dot:rgba(255,255,255,.09);
+  --shadow-card:0 0 0 .5px rgba(255,255,255,.06),0 1px 3px rgba(0,0,0,.4);
+  --shadow-float:0 0 0 .5px rgba(255,255,255,.1),0 12px 40px rgba(0,0,0,.45);
+  --shadow-lift-c:0 0 0 .5px rgba(255,255,255,.12),0 18px 48px rgba(0,0,0,.55);
+  color-scheme:dark;
+}
+/* liga os tokens novos às variáveis antigas do app */
+:root,:root[data-theme="dark"],:root[data-theme="light"]{
+  --bg:var(--canvas); --grid:var(--grid-dot); --card:var(--surface); --card-mix:var(--surface); --card-2:var(--control); --card-3:var(--control-hover);
+  --col:var(--column); --col-line:var(--separator);
+  --ink:var(--text); --ink-2:var(--text-2); --ink-3:var(--text-3); --line:var(--hairline); --line-2:var(--hairline);
+  --accent:var(--accent-c); --sel:var(--accent-c); --accent-soft:var(--select-fill); --accent-ink:var(--on-action);
+  --danger:var(--danger-c); --ok:var(--success);
+  --glass:var(--glass-bar); --glass-strong:var(--glass-pop); --glass-line:var(--hairline); --glass-hi:transparent; --glass-shadow:var(--shadow-float);
+  --shadow:var(--shadow-card); --shadow-lift:var(--shadow-lift-c);
+  --r-card:8px; --r-ui:6px; --r-panel:12px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:var(--canvas); --grid:var(--grid-dot); --card:var(--surface); --card-mix:var(--surface); --card-2:var(--control); --card-3:var(--control-hover);
+  --col:var(--column); --col-line:var(--separator); --ink:var(--text); --ink-2:var(--text-2); --ink-3:var(--text-3); --line:var(--hairline); --line-2:var(--hairline);
+  --accent:var(--accent-c); --sel:var(--accent-c); --accent-soft:var(--select-fill); --accent-ink:var(--on-action); --danger:var(--danger-c); --ok:var(--success);
+  --glass:var(--glass-bar); --glass-strong:var(--glass-pop); --glass-line:var(--hairline); --glass-hi:transparent; --glass-shadow:var(--shadow-float); --shadow:var(--shadow-card); --shadow-lift:var(--shadow-lift-c);
+}}
+body{background:var(--canvas);color:var(--text);font-size:13px;letter-spacing:-.01em}
+/* vidro plano (Apple): translúcido, desfoque, contorno de 0,5px, sem brilho e sem cáustica */
+#tools,#inbox,#zoomhud,#inbox-tab,#cmenu,.pop,#modal .box,#toast,.mpvol,#cmenu .flyout,#qn,#filterbar{
+  background-color:var(--glass-pop);background-image:none;
+  -webkit-backdrop-filter:var(--glass-filter);backdrop-filter:var(--glass-filter);box-shadow:var(--shadow-float)}
+#tools,#inbox,#zoomhud,#inbox-tab,#qn,#filterbar{background-color:var(--glass-bar)}
+#tools::before,#inbox::before,#zoomhud::before,#inbox-tab::before,#cmenu::before,.pop::before,#modal .box::before,#toast::before,.mpvol::before,#cmenu .flyout::before,#qn::before,#filterbar::before{display:none}
+#tools{border-radius:18px}
+#hdr{background:var(--glass-bar);-webkit-backdrop-filter:var(--glass-filter);backdrop-filter:var(--glass-filter);box-shadow:inset 0 -.5px 0 var(--hairline)}
+#hdr .brand i{background:#1d1d1f url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='3' y='3' width='5' height='6' rx='1.2' fill='%23f5f5f7'/%3E%3Crect x='9' y='3' width='4' height='3.5' rx='1.2' fill='%23f5f5f7' opacity='.85'/%3E%3Crect x='9' y='7.5' width='4' height='5.5' rx='1.2' fill='%23f5f5f7' opacity='.7'/%3E%3Crect x='3' y='10' width='5' height='3' rx='1.2' fill='%23f5f5f7' opacity='.6'/%3E%3C/svg%3E") center/100% no-repeat;border-radius:4px;box-shadow:0 0 0 .5px var(--hairline)}
+/* cartões e colunas: superfície tonal + sombra mínima */
+.el.column{background:var(--column);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:0 0 0 .5px var(--separator)}
+.el.board .ico{background:var(--surface);box-shadow:var(--shadow-card)}
+/* botões: pílulas Apple */
+.tool.on,.hbtn.on,#qn-btn.on,.ppop .pbtn,.pop.ppop .pbtn,#fview .fvd,#qn .qnadd,#docm .dmexp,.xpop .xrow button,#filterbar .fc,.btn,.spanel .sx:hover,#zoomhud button:hover{background:var(--control);background-image:none;color:var(--text);box-shadow:none;filter:none;text-shadow:none}
+.ppop .pbtn span,#fview .fvd span,#filterbar .fc{text-shadow:none}
+.ppop .pbtn,.pop.ppop .pbtn,#fview .fvd,.btn.pri{background:var(--action)!important;color:var(--on-action)!important;border-radius:980px}
+.pop.ppop .pbtn:hover,#fview .fvd:hover,.btn.pri:hover{filter:brightness(1.1)}
+#qn .qnadd,#docm .dmexp,.xpop .xrow button,#filterbar .fc,.btn{border-radius:980px}
+#qn .qnadd:hover,#docm .dmexp:hover,.xpop .xrow button:hover,#filterbar .fc:hover,.btn:hover{background:var(--control-hover);filter:none}
+.tool.on{background:var(--select-fill)}
+.tool.on,.tool.on span,.hbtn.on{color:var(--accent-c)}
+.hbtn.on,#qn-btn.on{background:var(--control)}
+.tool:hover:not(.on):not(.sep){background:var(--control);box-shadow:none}
+.btn.danger{color:var(--danger-c)}
+/* seletor segmentado (macOS) */
+.pop .cmodes{background:var(--control);box-shadow:none;border-radius:8px;padding:2px}
+.pop .cmodes button{border-radius:6px}
+.pop .cmodes button.on,:root[data-theme="light"] .pop .cmodes button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.25),0 0 0 .5px var(--hairline)}
+:root[data-theme="dark"] .pop .cmodes button.on{background:#636366;color:#fff}
+/* interruptor */
+.ptg i{background:var(--control)!important;box-shadow:none!important}
+.ptg input:checked + i{background:var(--accent-c)!important}
+.ptg i::after{background:#fff!important;box-shadow:0 1px 2px rgba(0,0,0,.3),0 0 0 .5px rgba(0,0,0,.06)!important}
+/* seleção e foco: anel de 2px no azul do tema */
+.el.sel{box-shadow:0 0 0 2px var(--accent-c),var(--shadow-card)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+/* ícones Phosphor (preenchidos): tamanho óptico parecido com SF Symbols */
+svg.ph{fill:currentColor;stroke:none}
+.tool i svg.ph{width:21px;height:21px}
+.hbtn svg.ph{width:17px;height:17px}

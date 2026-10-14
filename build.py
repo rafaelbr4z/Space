@@ -14,11 +14,28 @@ for n in BOARD_ICONS: MAP['bi_'+n]=n
 for n in ['youtube','instagram','twitter','facebook']: MAP['br_'+n]=n
 for k,v in MAP.items():
     if not os.path.exists(icons_dir+v+'.svg'): raise SystemExit('missing icon '+v)
-icons={k:ic(v) for k,v in MAP.items()}
+# Conjunto de ícones: Phosphor Regular (MIT, traço parecido com SF Symbols). Lucide fica como reserva.
+ICON_SET=os.environ.get('SPACE_ICONS','phosphor')
+ph_dir=os.path.join(ROOT,'vendor/node_modules/@phosphor-icons/core/assets/regular/')
+PHM={}
+exec(open(os.path.join(ROOT,'src/icons_phosphor.py'),encoding='utf-8').read(),PHM)
+def ph_name(k):
+    if k.startswith('bi_'): return PHM['BI'].get(k[3:])
+    if k.startswith('br_'): return PHM['BR'].get(k[3:])
+    return PHM['PH'].get(k)
+def icon_svg(k,v):
+    if ICON_SET=='phosphor':
+        n=ph_name(k)
+        if n and os.path.exists(ph_dir+n+'.svg'):
+            svg=open(ph_dir+n+'.svg',encoding='utf-8').read()
+            m=re.match(r'<svg([^>]*)>',svg.strip()); attrs=re.sub(r'\s(width|height|class|xmlns)="[^"]*"','',m.group(1))
+            return re.sub(r'\s+',' ','<svg'+attrs+' class="ph">'+svg.strip()[m.end():])
+    return ic(v)
+icons={k:icon_svg(k,v) for k,v in MAP.items()}
 css=open(os.path.join(ROOT,'src/style.css'),encoding='utf-8').read()
 markup=open(os.path.join(ROOT,'src/markup.html'),encoding='utf-8').read()
 js=open(os.path.join(ROOT,'src/app.js'),encoding='utf-8').read().replace('/*@@PARITY@@*/', open(os.path.join(ROOT,'src/parity.js'),encoding='utf-8').read()+'\n'+open(os.path.join(ROOT,'src/parity2.js'),encoding='utf-8').read()+'\n'+open(os.path.join(ROOT,'src/desktop.js'),encoding='utf-8').read())
-out='<title>Space</title>\n<style>\n'+css+'\n</style>\n'+markup+'\n<script>window.__ICONS='+json.dumps(icons,ensure_ascii=False)+';</script>\n<script>\n'+js+'\n</script>\n'
+out='<title>Space</title>\n<style>\n'+css+'\n</style>\n'+markup+'\n<script>window.__ICONS='+json.dumps(icons,ensure_ascii=False)+';window.__BOARD_ICONS='+json.dumps(BOARD_ICONS)+';</script>\n<script>\n'+js+'\n</script>\n'
 open(os.path.join(ROOT,'space.html'),'w',encoding='utf-8').write(out)
 open(os.path.join(ROOT,'test/index.html'),'w',encoding='utf-8').write('<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0">'+out+'</body></html>')
 open(os.path.join(ROOT,'test/check.js'),'w',encoding='utf-8').write(js)

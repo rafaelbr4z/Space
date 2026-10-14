@@ -1,34 +1,30 @@
-# Design system (v0.8)
+# Design system — Space Apple (v0.9)
 
-Base provisória até a marca própria do Braz. Tokens ficam no `:root` do `src/style.css`; o bloco "v0.8 — glass" no fim do arquivo é o que vale hoje.
+Fonte da verdade: o artifact **Space Apple** (Design System) no claude.ai — tokens, componentes com preview e regras de uso. Este arquivo resume o que o app aplica.
 
-## Tema
-- **Escuro ardósia (padrão):** canvas `#39414a` com grade de pontos `rgba(220,232,240,.13)`; cartão `#262b31`; texto `#eef2f5` / `#a9b4bd` / `#77838d`.
-- **Claro:** canvas `#e3e3e8`; cartão `#fff`; texto `#1d1d1f` / `#6e6e73` / `#aeaeb2`.
-- Acento `#0a84ff` (seleção) / `#0071e3`. Perigo `#ff3b30`.
-- O botão de tema alterna e salva em `localStorage` (`space-theme`).
+Origem: estilos da Apple compilados no Refero (styles.refero.design): apple.com, Apple (España) MacBook Pro / obsidian, iPhone 18 Pro, AirPods 5, Apple Watch Ultra 4 e o app Things.
 
-## Glass ("Source BTN")
-Referência: botão circular e pílula de vidro sobre fundo ardósia, com borda que reage à luz.
+## Princípios
+- Tom, não sombra: profundidade por superfície (`canvas` → `column` → `surface`) e contornos de 0,5px. Sombra só no que flutua.
+- Vidro plano: `backdrop-filter: blur(20px) saturate(180%)`; `glass-bar` em barras fixas, `glass-pop` em popovers/menus/modais. Sem brilho de borda.
+- Um azul: `accent` (#2997ff escuro / #0071e3 claro) para seleção, links e foco; `action` (#0071e3) para o único botão principal.
+- SF Pro do sistema, títulos em 600, tracking negativo.
+- Ícones Phosphor Regular, monocromáticos.
 
-Receita dos **painéis** (barra, Unsorted, Quick Notes, popups, menus, modais, toast, HUD):
-- fundo `--g-fill` translúcido + `backdrop-filter: blur(30px) saturate(150%)`;
-- `radial-gradient` claro na base (cáustica, `--g-caustic`) e `linear-gradient` escuro no topo (`--g-top`);
-- contorno escuro de 1px por fora (`--g-edge`) + sombra interna no topo (`--g-inner`) + sombra projetada (`--g-drop`);
-- borda especular de 1,5px num `::before` com máscara: forte no topo, some nas laterais, volta na base, com reforço diagonal no canto inferior direito (`--g-rim-*`). Painéis grandes usam a borda a 60%.
+## Tokens (escuro / claro)
+| Token | Escuro | Claro | Uso |
+|---|---|---|---|
+| canvas | #141415 | #f5f5f7 | fundo do quadro |
+| surface | #1d1d1f | #ffffff | cartões |
+| column | #1b1b1d | #ebebef | colunas |
+| control | #333336 | #e8e8ed | pílulas, segmentado, hover |
+| glass-bar | rgba(29,29,31,.72) | rgba(250,250,252,.72) | header, barra, Unsorted |
+| glass-pop | rgba(44,44,46,.88) | rgba(255,255,255,.9) | popovers, menus, modais |
+| text / text-2 / text-3 | #f5f5f7 / #a1a1a6 / #6e6e73 | #1d1d1f / #6e6e73 / #86868b | texto |
+| accent / action | #2997ff / #0071e3 | #0071e3 / #0071e3 | seleção / botão principal |
 
-Receita dos **botões de vidro** (Present, Download, Export, + Note, ferramenta ativa, aba ativa do seletor, botões de modal): mesma ideia com `box-shadow` internos — luz 1,5px no topo, 1px na base, sombra interna curta e contorno escuro.
-
-Toggles: trilho afundado + botão branco com brilho na base.
-
-## Forma
-Cartão 7px · UI 6px · painel 14px · pílula 980px. Barra lateral 66px com 6px entre ferramentas (2px em telas até 960px de altura).
-
-## Tipografia
-Fonte do sistema (SF Pro no Mac): base 13px, tracking -.01em; títulos 600/700. Mono: SF Mono.
+Raios: cartão 8, item 6, popover 12, barra lateral 18, botões 980 (pílula).
+No código: bloco "v0.9 — Space Apple" no fim de `src/style.css`; os tokens novos alimentam as variáveis antigas (`--bg`, `--card`, `--ink`…).
 
 ## Ícones
-Lucide (`lucide-static` 0.460.0) monocromáticos, traço 1,6–1,75. Ícones de quadro `bi_*` pintados pela cor do quadro. Marcas de links (YouTube, Instagram…) também em linha.
-
-## Movimento
-Popups 160ms `cubic-bezier(.19,1,.22,1)`; gaveta 300ms `cubic-bezier(.32,.72,0,1)`; foco da apresentação 280ms.
+`build.py` usa Phosphor (`vendor/node_modules/@phosphor-icons/core`) pelo mapa `src/icons_phosphor.py`; `SPACE_ICONS=lucide python3 build.py` volta ao Lucide.
