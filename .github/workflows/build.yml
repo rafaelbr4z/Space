@@ -4,7 +4,7 @@
 # Mesma versão = mesma release (arquivos substituídos). Para uma atualização nova, suba a versão em
 # package.json, src-tauri/Cargo.toml e src-tauri/tauri.conf.json.
 # Segredo necessário (Settings → Secrets and variables → Actions):
-#   TAURI_SIGNING_PRIVATE_KEY  chave privada que assina as atualizações (a pública está no tauri.conf.json)
+#   TAURI_SIGNING_PRIVATE_KEY  chave privada que assina as atualizações (a pública está no tauri.conf.json) — configurado em 2026-10-14
 name: Build app
 
 on:
