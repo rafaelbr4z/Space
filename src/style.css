@@ -902,3 +902,9 @@ body{background:var(--canvas);color:var(--text);font-size:13px;letter-spacing:-.
 svg.ph{fill:currentColor;stroke:none}
 .tool i svg.ph{width:21px;height:21px}
 .hbtn svg.ph{width:17px;height:17px}
+/* v0.9.1 — Heroicons outline (traço 1,5) e reserva Lucide com o mesmo traço */
+svg.hi,svg.lu{fill:none;stroke:currentColor}
+svg.hi,svg.lu,.tool i svg.hi,.tool i svg.lu,.hbtn svg.hi,.hbtn svg.lu,.pop button svg.hi,.pop button svg.lu{stroke-width:1.5}
+.tool i svg.hi,.tool i svg.lu{width:21px;height:21px}
+.hbtn svg.hi,.hbtn svg.lu{width:18px;height:18px}
+.el.board .ico.gl svg.hi{stroke-width:1.3}

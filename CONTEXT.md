@@ -28,7 +28,8 @@ Biblioteca pessoal de links, referências e imagens, organizada em quadros. Recu
 | 2026-10-13 | Nome **Space**. Interface em inglês. |
 | 2026-10-13 | Fora do app: Table, Sketch e Draw (cartões antigos ainda abrem; "Draw on" em imagem continua). |
 | 2026-10-13 | Visual: cantos menos arredondados, mais espaço entre ícones, ícones monocromáticos (Lucide), sem emoji colorido. |
-| 2026-10-13 | Glass "Source BTN" testado (v0.8) e substituído pelo design system **Space Apple** (v0.9): estilos Apple do Refero unificados, vidro plano, tom em vez de sombra, ícones Phosphor. Tema escuro como padrão. |
+| 2026-10-13 | Glass "Source BTN" testado (v0.8) e substituído pelo design system **Space Apple** (v0.9): estilos Apple do Refero unificados, vidro plano, tom em vez de sombra. Tema escuro como padrão. |
+| 2026-10-13 | Ícones: **Heroicons outline** (heroicons.com), escolha do Braz (Lucide só onde falta desenho). |
 | 2026-10-13 | App de desktop com **Tauri 2** (Mac Apple Silicon primeiro; Windows sai do mesmo código). Repositório GitHub **privado**. |
 | 2026-10-13 | Importador do Milanote é a menor prioridade (dá para copiar e colar). |
 

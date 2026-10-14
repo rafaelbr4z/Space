@@ -14,23 +14,21 @@ for n in BOARD_ICONS: MAP['bi_'+n]=n
 for n in ['youtube','instagram','twitter','facebook']: MAP['br_'+n]=n
 for k,v in MAP.items():
     if not os.path.exists(icons_dir+v+'.svg'): raise SystemExit('missing icon '+v)
-# Conjunto de ícones: Phosphor Regular (MIT, traço parecido com SF Symbols). Lucide fica como reserva.
-ICON_SET=os.environ.get('SPACE_ICONS','phosphor')
-ph_dir=os.path.join(ROOT,'vendor/node_modules/@phosphor-icons/core/assets/regular/')
-PHM={}
-exec(open(os.path.join(ROOT,'src/icons_phosphor.py'),encoding='utf-8').read(),PHM)
-def ph_name(k):
-    if k.startswith('bi_'): return PHM['BI'].get(k[3:])
-    if k.startswith('br_'): return PHM['BR'].get(k[3:])
-    return PHM['PH'].get(k)
+# Conjunto de ícones: Heroicons v2 outline (MIT), escolha do Braz. Sem equivalente → Lucide.
+# SPACE_ICONS=phosphor ou lucide troca o conjunto.
+ICON_SET=os.environ.get('SPACE_ICONS','heroicons')
+SETS={'heroicons':(os.path.join(ROOT,'vendor/node_modules/heroicons/24/outline/'),'src/icons_heroicons.py','HI','hi'),
+      'phosphor':(os.path.join(ROOT,'vendor/node_modules/@phosphor-icons/core/assets/regular/'),'src/icons_phosphor.py','PH','ph')}
 def icon_svg(k,v):
-    if ICON_SET=='phosphor':
-        n=ph_name(k)
-        if n and os.path.exists(ph_dir+n+'.svg'):
-            svg=open(ph_dir+n+'.svg',encoding='utf-8').read()
-            m=re.match(r'<svg([^>]*)>',svg.strip()); attrs=re.sub(r'\s(width|height|class|xmlns)="[^"]*"','',m.group(1))
-            return re.sub(r'\s+',' ','<svg'+attrs+' class="ph">'+svg.strip()[m.end():])
-    return ic(v)
+    if ICON_SET in SETS:
+        d,mapf,key,cls=SETS[ICON_SET]; M={}
+        exec(open(os.path.join(ROOT,mapf),encoding='utf-8').read(),M)
+        n = M['BI'].get(k[3:]) if k.startswith('bi_') else M['BR'].get(k[3:]) if k.startswith('br_') else M[key].get(k)
+        if n and os.path.exists(d+n+'.svg'):
+            svg=open(d+n+'.svg',encoding='utf-8').read().strip()
+            m=re.match(r'<svg([^>]*)>',svg); attrs=re.sub(r'\s(width|height|class|xmlns|aria-hidden|data-slot)="[^"]*"','',m.group(1))
+            return re.sub(r'\s+',' ','<svg'+attrs+' class="'+cls+'">'+svg[m.end():])
+    return ic(v).replace('<svg','<svg class="lu"',1)
 icons={k:icon_svg(k,v) for k,v in MAP.items()}
 css=open(os.path.join(ROOT,'src/style.css'),encoding='utf-8').read()
 markup=open(os.path.join(ROOT,'src/markup.html'),encoding='utf-8').read()

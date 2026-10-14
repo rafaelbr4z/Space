@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.9.1 — 2026-10-13
+- **Ícones Heroicons v2 outline** (MIT, heroicons.com), escolha do Braz. Traço de 1,5px; onde não há desenho equivalente (alinhamento, recuo, citação, algumas figuras de quadro, marcas), usa o Lucide com o mesmo traço.
+
 ## v0.9.0 — 2026-10-13
 - **Design system "Space Apple"**: estilos da Apple compilados no Refero (apple.com, MacBook Pro, iPhone 18 Pro, AirPods, Watch Ultra, Things) unificados num só sistema. Tom em vez de sombra, vidro plano (desfoque + saturação, sem brilho de borda), um azul só para ação e seleção, botões em pílula, menus no padrão macOS.
 - Paleta escura Apple (#141415 / #1d1d1f / #333336, texto #f5f5f7 / #a1a1a6) e clara (#f5f5f7 / #ffffff).

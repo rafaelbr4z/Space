@@ -9,7 +9,7 @@ Origem: estilos da Apple compilados no Refero (styles.refero.design): apple.com,
 - Vidro plano: `backdrop-filter: blur(20px) saturate(180%)`; `glass-bar` em barras fixas, `glass-pop` em popovers/menus/modais. Sem brilho de borda.
 - Um azul: `accent` (#2997ff escuro / #0071e3 claro) para seleção, links e foco; `action` (#0071e3) para o único botão principal.
 - SF Pro do sistema, títulos em 600, tracking negativo.
-- Ícones Phosphor Regular, monocromáticos.
+- Ícones Heroicons v2 outline, monocromáticos.
 
 ## Tokens (escuro / claro)
 | Token | Escuro | Claro | Uso |
@@ -27,4 +27,4 @@ Raios: cartão 8, item 6, popover 12, barra lateral 18, botões 980 (pílula).
 No código: bloco "v0.9 — Space Apple" no fim de `src/style.css`; os tokens novos alimentam as variáveis antigas (`--bg`, `--card`, `--ink`…).
 
 ## Ícones
-`build.py` usa Phosphor (`vendor/node_modules/@phosphor-icons/core`) pelo mapa `src/icons_phosphor.py`; `SPACE_ICONS=lucide python3 build.py` volta ao Lucide.
+`build.py` usa Heroicons outline (`vendor/node_modules/heroicons/24/outline`) pelo mapa `src/icons_heroicons.py`; sem equivalente → Lucide. `SPACE_ICONS=phosphor` ou `SPACE_ICONS=lucide` troca o conjunto.

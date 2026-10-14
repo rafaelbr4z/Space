@@ -1,6 +1,6 @@
 {
   "name": "space",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "private": true,
   "description": "Space — a personal, local-first boards app (Milanote-style) for references, links and images.",
   "scripts": {

@@ -9,7 +9,7 @@ Rafael Braz, motion designer. Não programa. Fale com ele em **português do Bra
 1. **Paridade com o Milanote primeiro.** Recurso novo só depois que o equivalente do Milanote estiver igual e funcionando.
 2. **Compare sempre via REA** antes de implementar: leia o código do Milanote (app de desktop → `app.asar` → source maps). Registre fatos novos em `docs/milanote-facts.md` e o placar em `docs/rea-report.html`.
 3. Não reintroduza Table, Sketch nem Draw na barra (decisão do Braz).
-4. Ícones monocromáticos (Lucide), sem emoji colorido na UI.
+4. Ícones Heroicons outline (mapa em `src/icons_heroicons.py`), monocromáticos, sem emoji colorido na UI.
 5. Toda mudança: teste automatizado + screenshot conferido + CHANGELOG atualizado.
 
 ## Comandos
