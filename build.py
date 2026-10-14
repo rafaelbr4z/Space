@@ -33,7 +33,7 @@ icons={k:icon_svg(k,v) for k,v in MAP.items()}
 css=open(os.path.join(ROOT,'src/style.css'),encoding='utf-8').read()
 markup=open(os.path.join(ROOT,'src/markup.html'),encoding='utf-8').read()
 js=open(os.path.join(ROOT,'src/app.js'),encoding='utf-8').read().replace('/*@@PARITY@@*/', open(os.path.join(ROOT,'src/parity.js'),encoding='utf-8').read()+'\n'+open(os.path.join(ROOT,'src/parity2.js'),encoding='utf-8').read()+'\n'+open(os.path.join(ROOT,'src/desktop.js'),encoding='utf-8').read())
-out='<title>Space</title>\n<style>\n'+css+'\n</style>\n'+markup+'\n<script>window.__ICONS='+json.dumps(icons,ensure_ascii=False)+';window.__BOARD_ICONS='+json.dumps(BOARD_ICONS)+';</script>\n<script>\n'+js+'\n</script>\n'
+out='<title>Space</title>\n<style>\n'+css+'\n</style>\n'+markup+'\n<script>window.__ICONS='+json.dumps(icons,ensure_ascii=False)+';window.__BOARD_ICONS='+json.dumps(BOARD_ICONS)+';window.__SPACE_VERSION='+json.dumps(json.load(open('src-tauri/tauri.conf.json',encoding='utf-8'))['version'])+';</script>\n<script>\n'+js+'\n</script>\n'
 open(os.path.join(ROOT,'space.html'),'w',encoding='utf-8').write(out)
 open(os.path.join(ROOT,'test/index.html'),'w',encoding='utf-8').write('<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0">'+out+'</body></html>')
 open(os.path.join(ROOT,'test/check.js'),'w',encoding='utf-8').write(js)

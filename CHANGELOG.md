@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.9.7 — 2026-10-14
+- **Atualização dentro do app**: o Space procura versão nova ao abrir e a cada 6 horas. Quando tem, aparece "Space x.y.z is available" com **Update** (baixa com barra de progresso, salva os quadros e reinicia) ou **Later**. Na janela de atalhos (**?**) aparece a versão e o botão *Check for Updates…*.
+- Instaladores publicados em `github.com/rafaelbr4z/space-releases` (público, só os instaladores; o código continua privado). As atualizações são assinadas.
+
 ## v0.9.6 — 2026-10-14
 - **Botão fixo "Templates"** no canto inferior direito, logo acima do zoom. Abre o seletor em qualquer quadro, inclusive nos que já têm conteúdo ou em que o seletor foi fechado. Em quadro com conteúdo, o template entra abaixo do que já existe (a prévia mostra onde vai ficar). O botão some enquanto o seletor está aberto.
 

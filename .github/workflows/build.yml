@@ -1,6 +1,11 @@
 # Gera o app de desktop: .dmg (Mac Apple Silicon) e instalador .exe (Windows).
-# Roda sozinho a cada push na main e publica os instaladores em Releases (tag v<versão do tauri.conf.json>, criada pelo próprio GitHub).
-# Mesma versão = mesma release (os arquivos são substituídos). Para uma release nova, suba a versão em package.json, Cargo.toml e tauri.conf.json.
+# Roda sozinho a cada push na main e publica em github.com/rafaelbr4z/space-releases (público, só instaladores;
+# o código continua privado aqui). O app instalado procura atualizações no latest.json dessa release.
+# Mesma versão = mesma release (arquivos substituídos). Para uma atualização nova, suba a versão em
+# package.json, src-tauri/Cargo.toml e src-tauri/tauri.conf.json.
+# Segredos necessários (Settings → Secrets and variables → Actions):
+#   RELEASES_TOKEN            token do GitHub com Contents: Read and write no repo space-releases
+#   TAURI_SIGNING_PRIVATE_KEY chave privada que assina as atualizações (a pública está no tauri.conf.json)
 name: Build app
 
 on:
@@ -58,11 +63,16 @@ jobs:
       - name: Compilar com Tauri
         uses: tauri-apps/tauri-action@v0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ''
         with:
+          owner: rafaelbr4z
+          repo: space-releases
+          releaseCommitish: main
           tagName: v__VERSION__
           releaseName: Space v__VERSION__
-          releaseBody: 'Veja o CHANGELOG.md. No Mac, se aparecer "app danificado": xattr -cr /Applications/Space.app'
+          releaseBody: 'Primeira instalação no Mac: arraste o Space para Aplicativos e rode no Terminal: xattr -cr /Applications/Space.app — depois disso o app se atualiza sozinho.'
           releaseDraft: false
           args: ${{ matrix.args }}
 

@@ -45,7 +45,8 @@ let DB;
 function openDB(){ return new Promise((res,rej)=>{ const r=indexedDB.open('space-db',1); r.onupgradeneeded=()=>{const d=r.result; d.createObjectStore('doc'); d.createObjectStore('blobs');}; r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); }
 const idb = (store, mode, fn) => new Promise((res,rej)=>{ if(!DB) return res(null); const tx=DB.transaction(store,mode); const st=tx.objectStore(store); const rq=fn(st); tx.oncomplete=()=>res(rq&&rq.result); tx.onerror=()=>rej(tx.error); });
 const GEN=3; // bump to wipe every browser's old data on next load
-let saveT; function save(){ clearTimeout(saveT); saveT=setTimeout(async()=>{ try{ await idb('doc','readwrite', st=>st.put({gen:GEN, els:tplCleanEls(), view:S.view, cur:S.cur, inboxOpen:S.inboxOpen, meta:S.meta, savedAt:Date.now()}, 'main')); }catch(e){ console.warn('save',e);} }, 250); }
+function saveDoc(){ return idb('doc','readwrite', st=>st.put({gen:GEN, els:tplCleanEls(), view:S.view, cur:S.cur, inboxOpen:S.inboxOpen, meta:S.meta, savedAt:Date.now()}, 'main')); }
+let saveT; function save(){ clearTimeout(saveT); saveT=setTimeout(async()=>{ try{ await saveDoc(); }catch(e){ console.warn('save',e);} }, 250); }
 async function putBlob(id, blob){ try{ await idb('blobs','readwrite', st=>st.put(blob,id)); }catch(e){console.warn(e);} }
 async function getBlob(id){ try{ return await idb('blobs','readonly', st=>st.get(id)); }catch(e){ return null; } }
 async function blobUrl(id){ if(!id) return null; if(S.blobUrls[id]) return S.blobUrls[id]; const b=await getBlob(id); if(!b) return null; S.blobUrls[id]=URL.createObjectURL(b); return S.blobUrls[id]; }
@@ -649,7 +650,7 @@ function showHelp(){ const SECS=[['The basics',[['New note','Double-click the bo
   ['Zoom & appearance',[['Zoom in / out','⌘ + / ⌘ −'],['Reset to 100%','⌘ 0'],['Scale to fit','Z'],['Smaller / larger interface','⌘ ⇧ , / ⌘ ⇧ .'],['Toggle dark mode','⌘ ⇧ D']]],
   ['Text formatting',[['Bold / italic / underline','⌘ B / I / U'],['Strikethrough','⌘ ⇧ X'],['Large heading / normal heading','⌘ ⇧ 1 / 2'],['Normal text / small text','⌘ ⇧ 0 / 9'],['Bullet / numbered list','⌘ ⇧ U / O'],['Indent / un-indent','Tab / ⇧ Tab'],['Highlight','⌘ J'],['Hyperlink','⌘ K'],['Align center','⌘ \\']]],
   ['Markdown',[['Large heading','# then space'],['Normal heading','## then space'],['Bullet list','* then space'],['Numbered list','1. then space'],['Checkbox','[] then space'],['Quote','> then space'],['Callout','! then space'],['Code block','``` then space'],['Divider line','---']]]];
-  modal(`<h2>Shortcuts</h2>${SECS.map(([h,rows])=>`<h3>${h}</h3><table>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table>`).join('')}<p class="tip">Press / to show shortcuts</p><div class="row"><button class="btn" id="hclose">Close</button></div>`); $('#hclose').onclick=closeModal; }
+  modal(`<h2>Shortcuts</h2>${SECS.map(([h,rows])=>`<h3>${h}</h3><table>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table>`).join('')}<p class="tip">Press / to show shortcuts</p><div class="row"><button class="btn" id="hclose">Close</button></div>`); $('#hclose').onclick=closeModal; updHelpRow(); }
 $('#help').onclick=showHelp;
 
 /*@@PARITY@@*/

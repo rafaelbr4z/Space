@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Space",
-  "version": "0.9.6",
+  "version": "0.9.7",
   "identifier": "com.rafaelbraz.space",
   "build": {
     "frontendDist": "../app"
@@ -28,6 +28,15 @@
     ],
     "macOS": {
       "minimumSystemVersion": "11.0"
+    },
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEMwNUU3MUI4RjU3NEEyNkMKUldSc29uVDF1SEZld0lkbXBKcWVMam9LK2N0eUNsN2pSQWdtSEpMSE9ENVl3THkraFJwWXNrZVEK",
+      "endpoints": [
+        "https://github.com/rafaelbr4z/space-releases/releases/latest/download/latest.json"
+      ]
     }
   }
 }

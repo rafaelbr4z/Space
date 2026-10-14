@@ -81,12 +81,14 @@ No app de desktop, o IndexedDB fica dentro do armazenamento do WebView, ligado �
 - `disable_drag_drop_handler()` deixa o arrastar de arquivos do Finder chegar na página.
 - Libs de export e PDF (html2canvas, jsPDF, JSZip, pdf.js 3.11.174) são carregadas de `app/libs/` quando `window.__SPACE_APP` é verdadeiro (`loadScript`), senão do cdnjs.
 
-O CI (`build.yml`) instala Node, Python e Rust, roda `build.py` e `tauri-action`. Mac: alvo `aarch64-apple-darwin` (Apple Silicon). O app não é assinado nem notarizado (ver README para abrir).
+**Atualização:** `tauri-plugin-updater` + `tauri-plugin-process`. O app lê `https://github.com/rafaelbr4z/space-releases/releases/latest/download/latest.json` (repositório público só com instaladores, porque o app não tem como se autenticar no repo privado). A chave pública fica em `tauri.conf.json → plugins.updater.pubkey`; a privada só no segredo `TAURI_SIGNING_PRIVATE_KEY` do GitHub. Em `desktop.js`: `checkUpdates(manual)` (6 s depois de abrir e a cada 6 h), barra `#updbar` com Update/Later, `installUpdate` grava o documento (`saveDoc()`) antes de instalar e reiniciar; `updHelpRow()` põe versão e *Check for Updates…* no modal de atalhos. A versão da página vem de `tauri.conf.json` (`window.__SPACE_VERSION`, injetada pelo `build.py`).
+
+O CI (`build.yml`) instala Node, Python e Rust, roda `build.py` e `tauri-action`, que publica a release `v<versão>` em `space-releases` usando o segredo `RELEASES_TOKEN`. Mac: alvo `aarch64-apple-darwin` (Apple Silicon). O app não é assinado nem notarizado (ver README para abrir).
 
 ## Testes
 
 Playwright, importado do caminho global (`/home/claude/.npm-global/lib/node_modules/playwright/index.mjs` no ambiente do Claude; ajuste para `import { chromium } from 'playwright'` numa máquina com `npm i -D playwright`). Rodar `python3 build.py` antes.
 
-- `test/round2.mjs` (96) — itens da v0.7. `test/parity.mjs` (46) — v0.6. `tour.mjs` — passeio geral. `new.mjs` — ferramentas e seed. `stress2.mjs` — linhas e arrastos (1 falso negativo conhecido).
+- `test/updater.mjs` (10) — atualização com `window.__TAURI__` simulado. `test/round2.mjs` (96) — itens da v0.7. `test/parity.mjs` (46) — v0.6. `tour.mjs` — passeio geral. `new.mjs` — ferramentas e seed. `stress2.mjs` — linhas e arrastos (1 falso negativo conhecido).
 - `window.__space` expõe `S, render, save, mk, addEl, commit, view, applyView, canvasKids, listKids, inboxKids, openBoard, navBack, navFwd` para montar cenários.
 - Pegadinhas: pointer capture redireciona o `click`; no Linux use Control no lugar de ⌘; elementos cortados por `overflow` ainda contam como visíveis; CDNs ficam bloqueados no sandbox — os testes de export usam `p.route` para servir `vendor/libs`.
