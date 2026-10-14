@@ -1,5 +1,6 @@
 # Gera o app de desktop: .dmg (Mac Apple Silicon) e instalador .exe (Windows).
-# Roda sozinho a cada push na main (artifacts .dmg/.exe), ao criar uma tag v* (release em rascunho) e pelo botão "Run workflow" na aba Actions.
+# Roda sozinho a cada push na main e publica os instaladores em Releases (tag v<versão do tauri.conf.json>, criada pelo próprio GitHub).
+# Mesma versão = mesma release (os arquivos são substituídos). Para uma release nova, suba a versão em package.json, Cargo.toml e tauri.conf.json.
 name: Build app
 
 on:
@@ -59,10 +60,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
-          releaseName: ${{ github.ref_type == 'tag' && format('Space {0}', github.ref_name) || '' }}
+          tagName: v__VERSION__
+          releaseName: Space v__VERSION__
           releaseBody: 'Veja o CHANGELOG.md. No Mac, se aparecer "app danificado": xattr -cr /Applications/Space.app'
-          releaseDraft: true
+          releaseDraft: false
           args: ${{ matrix.args }}
 
       - name: Guardar instaladores
