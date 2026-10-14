@@ -27,4 +27,4 @@ Raios: cartão 8, item 6, popover 12, barra lateral 18, botões 980 (pílula).
 No código: bloco "v0.9 — Space Apple" no fim de `src/style.css`; os tokens novos alimentam as variáveis antigas (`--bg`, `--card`, `--ink`…).
 
 ## Ícones
-`build.py` usa Heroicons outline (`vendor/node_modules/heroicons/24/outline`) pelo mapa `src/icons_heroicons.py`; sem equivalente → Lucide. `SPACE_ICONS=phosphor` ou `SPACE_ICONS=lucide` troca o conjunto.
+`build.py` usa Heroicons outline (`vendor/node_modules/heroicons/24/outline`) pelo mapa `src/icons_heroicons.py` — todos os ícones, sem mistura. `SPACE_ICONS=phosphor` ou `SPACE_ICONS=lucide` troca o conjunto.

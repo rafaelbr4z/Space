@@ -1,7 +1,7 @@
 # Changelog
 
 ## v0.9.1 — 2026-10-13
-- **Ícones Heroicons v2 outline** (MIT, heroicons.com), escolha do Braz. Traço de 1,5px; onde não há desenho equivalente (alinhamento, recuo, citação, algumas figuras de quadro, marcas), usa o Lucide com o mesmo traço.
+- **Ícones Heroicons v2 outline** (MIT, heroicons.com), escolha do Braz. Traço de 1,5px. Todos os 170 ícones do app vêm do Heroicons (sem mistura); onde não há desenho exato (alinhamento, recuo, citação, marcas como YouTube), usa o mais próximo da própria biblioteca.
 
 ## v0.9.0 — 2026-10-13
 - **Design system "Space Apple"**: estilos da Apple compilados no Refero (apple.com, MacBook Pro, iPhone 18 Pro, AirPods, Watch Ultra, Things) unificados num só sistema. Tom em vez de sombra, vidro plano (desfoque + saturação, sem brilho de borda), um azul só para ação e seleção, botões em pílula, menus no padrão macOS.
