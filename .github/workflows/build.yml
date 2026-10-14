@@ -1,10 +1,12 @@
 # Gera o app de desktop: .dmg (Mac Apple Silicon) e instalador .exe (Windows).
-# Roda sozinho ao criar uma tag v* (ex.: v0.8.0) e também pelo botão "Run workflow" na aba Actions.
+# Roda sozinho a cada push na main (artifacts .dmg/.exe), ao criar uma tag v* (release em rascunho) e pelo botão "Run workflow" na aba Actions.
 name: Build app
 
 on:
   push:
+    branches: [main]
     tags: ['v*']
+    paths-ignore: ['**.md', 'docs/**']
   workflow_dispatch:
 
 permissions:
