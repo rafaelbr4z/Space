@@ -8,7 +8,7 @@ Quadros visuais pessoais, no estilo do Milanote: notas, links, imagens, arquivos
 
 ## Instalar (Mac)
 
-1. Baixe o `Space_x.y.z_aarch64.dmg` em **github.com/rafaelbr4z/space-releases/releases** (repositório público só com os instaladores; o código fica aqui, privado).
+1. Baixe o `Space_x.y.z_aarch64.dmg` em **github.com/rafaelbr4z/Space/releases**.
 2. Abra o `.dmg` e arraste o **Space** para **Aplicativos**.
 3. O app ainda não é assinado pela Apple. Na primeira vez, se o macOS disser que o app "está danificado" ou "não pode ser aberto", rode no Terminal:
    ```
@@ -46,7 +46,7 @@ npx tauri build             # gera o instalador da sua máquina
 node test/round2.mjs        # testes (Playwright; veja ARCHITECTURE.md)
 ```
 
-O build no GitHub (`.github/workflows/build.yml`) roda a cada push na `main`, gera o `.dmg` e o `.exe`, assina a atualização e publica em `space-releases` com a tag `v<versão>`. Para lançar uma atualização, suba a versão em `package.json`, `src-tauri/Cargo.toml` e `src-tauri/tauri.conf.json`. Segredos do repositório: `RELEASES_TOKEN` (token com escrita em space-releases) e `TAURI_SIGNING_PRIVATE_KEY` (sem ela não dá para publicar atualizações; guarde uma cópia).
+O build no GitHub (`.github/workflows/build.yml`) roda a cada push na `main`, gera o `.dmg` e o `.exe`, assina a atualização e publica em Releases com a tag `v<versão>`. Para lançar uma atualização, suba a versão em `package.json`, `src-tauri/Cargo.toml` e `src-tauri/tauri.conf.json`. Segredo do repositório: `TAURI_SIGNING_PRIVATE_KEY` (sem ela não dá para publicar atualizações; guarde uma cópia).
 
 ## Documentação
 

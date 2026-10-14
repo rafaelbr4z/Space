@@ -30,9 +30,9 @@ Biblioteca pessoal de links, referências e imagens, organizada em quadros. Recu
 | 2026-10-13 | Visual: cantos menos arredondados, mais espaço entre ícones, ícones monocromáticos (Lucide), sem emoji colorido. |
 | 2026-10-13 | Glass "Source BTN" testado (v0.8) e substituído pelo design system **Space Apple** (v0.9): estilos Apple do Refero unificados, vidro plano, tom em vez de sombra. Tema escuro como padrão. |
 | 2026-10-13 | Ícones: **Heroicons outline** (heroicons.com), escolha do Braz; todos os ícones do app vêm dela. |
-| 2026-10-13 | App de desktop com **Tauri 2** (Mac Apple Silicon primeiro; Windows sai do mesmo código). Repositório GitHub **privado**. |
+| 2026-10-13 | App de desktop com **Tauri 2** (Mac Apple Silicon primeiro; Windows sai do mesmo código). Repositório GitHub privado no início (público desde 2026-10-14, ver abaixo). |
 | 2026-10-14 | Fora por enquanto: botão de apresentação no header (atalho fica). Lixeira só no header. Seleção múltipla: só Distribute (linha/coluna com espaçamento igual). |
-| 2026-10-14 | Atualização dentro do app. Instaladores num repositório público separado (`space-releases`), aprovado pelo Braz; código continua privado. |
+| 2026-10-14 | Atualização dentro do app. Um repositório só (Space), que passa a ser **público** para o app baixar as atualizações (decisão do Braz: não quer vários repositórios). |
 | 2026-10-13 | Importador do Milanote é a menor prioridade (dá para copiar e colar). |
 
 ## Onde estamos (v0.9)

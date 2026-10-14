@@ -17,7 +17,7 @@ if(window.__TAURI__){
   document.addEventListener('fullscreenchange', ()=>{});
 }
 
-/* ---- atualização dentro do app (tauri-plugin-updater; baixa de github.com/rafaelbr4z/space-releases, assinado) ---- */
+/* ---- atualização dentro do app (tauri-plugin-updater; baixa das Releases de github.com/rafaelbr4z/Space, assinado) ---- */
 var UPD={ busy:false, last:0 };
 function spaceVersion(){ return window.__SPACE_VERSION||''; }
 // linha "Space 0.9.x · Check for Updates" no modal de atalhos

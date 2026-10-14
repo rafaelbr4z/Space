@@ -31,4 +31,4 @@ npx tauri dev | npx tauri build
 
 ## Publicar
 - Preview: artifact `https://claude.ai/artifact/1msw9bEboLXJkRHfXVwMvL` (publicar `space.html`).
-- App: repositório privado `github.com/rafaelbr4z/space`. Cada push na `main` dispara o GitHub Actions, que gera `.dmg` (Mac Apple Silicon) e `.exe` e publica em **Releases** com a tag `v<versão>` (o próprio Actions cria a tag; a sessão do Claude não consegue enviar tags nem baixar arquivos do GitHub). Suba a versão (package.json, Cargo.toml, tauri.conf.json) para gerar uma release nova; mesma versão substitui os arquivos.
+- App: repositório privado `github.com/rafaelbr4z/space`. Cada push na `main` dispara o GitHub Actions, que gera `.dmg` (Mac Apple Silicon) e `.exe` e publica em **Releases** com a tag `v<versão>` (o próprio Actions cria a tag; a sessão do Claude não consegue enviar tags nem baixar arquivos do GitHub). O app instalado se atualiza pelo `latest.json` dessas releases, por isso o repositório é público. Nunca coloque chaves ou senhas no repositório. Suba a versão (package.json, Cargo.toml, tauri.conf.json) para gerar uma release nova; mesma versão substitui os arquivos.

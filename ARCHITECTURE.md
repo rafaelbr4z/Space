@@ -81,9 +81,9 @@ No app de desktop, o IndexedDB fica dentro do armazenamento do WebView, ligado �
 - `disable_drag_drop_handler()` deixa o arrastar de arquivos do Finder chegar na página.
 - Libs de export e PDF (html2canvas, jsPDF, JSZip, pdf.js 3.11.174) são carregadas de `app/libs/` quando `window.__SPACE_APP` é verdadeiro (`loadScript`), senão do cdnjs.
 
-**Atualização:** `tauri-plugin-updater` + `tauri-plugin-process`. O app lê `https://github.com/rafaelbr4z/space-releases/releases/latest/download/latest.json` (repositório público só com instaladores, porque o app não tem como se autenticar no repo privado). A chave pública fica em `tauri.conf.json → plugins.updater.pubkey`; a privada só no segredo `TAURI_SIGNING_PRIVATE_KEY` do GitHub. Em `desktop.js`: `checkUpdates(manual)` (6 s depois de abrir e a cada 6 h), barra `#updbar` com Update/Later, `installUpdate` grava o documento (`saveDoc()`) antes de instalar e reiniciar; `updHelpRow()` põe versão e *Check for Updates…* no modal de atalhos. A versão da página vem de `tauri.conf.json` (`window.__SPACE_VERSION`, injetada pelo `build.py`).
+**Atualização:** `tauri-plugin-updater` + `tauri-plugin-process`. O app lê `https://github.com/rafaelbr4z/Space/releases/latest/download/latest.json` (por isso o repositório é público: o app não tem como se autenticar). A chave pública fica em `tauri.conf.json → plugins.updater.pubkey`; a privada só no segredo `TAURI_SIGNING_PRIVATE_KEY` do GitHub. Em `desktop.js`: `checkUpdates(manual)` (6 s depois de abrir e a cada 6 h), barra `#updbar` com Update/Later, `installUpdate` grava o documento (`saveDoc()`) antes de instalar e reiniciar; `updHelpRow()` põe versão e *Check for Updates…* no modal de atalhos. A versão da página vem de `tauri.conf.json` (`window.__SPACE_VERSION`, injetada pelo `build.py`).
 
-O CI (`build.yml`) instala Node, Python e Rust, roda `build.py` e `tauri-action`, que publica a release `v<versão>` em `space-releases` usando o segredo `RELEASES_TOKEN`. Mac: alvo `aarch64-apple-darwin` (Apple Silicon). O app não é assinado nem notarizado (ver README para abrir).
+O CI (`build.yml`) instala Node, Python e Rust, roda `build.py` e `tauri-action`, que publica a release `v<versão>` neste repositório. Mac: alvo `aarch64-apple-darwin` (Apple Silicon). O app não é assinado nem notarizado (ver README para abrir).
 
 ## Testes
 
