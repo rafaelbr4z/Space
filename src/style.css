@@ -923,3 +923,6 @@ svg.hi,svg.lu,.tool i svg.hi,.tool i svg.lu,.hbtn svg.hi,.hbtn svg.lu,.pop butto
 #fview .fvpages{width:100%;height:100%;overflow:auto;display:flex;flex-direction:column;align-items:center;gap:16px;padding:24px;box-sizing:border-box;align-self:stretch}
 #fview .fvpage{display:block;max-width:100%;height:auto;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.3);border-radius:2px}
 #fview .fvload{color:var(--text-2);font-size:13px;margin:40px 0}
+/* v0.9.4 — apresentação fora do header por enquanto (atalho ⌘⌥P continua); lixeira do header recebe cartões arrastados */
+#present{display:none}
+#trashbtn.over{background:var(--danger-c);color:#fff}

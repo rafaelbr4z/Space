@@ -110,7 +110,7 @@ function renderTools(){ const t=$('#tools'); t.innerHTML=''; const mode = S.draw
     if(only==='comment'){ add('ccollapse', els.every(e=>e.content.collapsed)?'Expand':'Collapse','collapse',{on:els.every(e=>e.content.collapsed)}); }
     if(only==='sketch'&&one) add('sketchedit','Edit drawing','sketch');
     if(only==='map'&&one) add('mapedit','Place','map');
-    if(els.length>1 && onlyCanvas){ add('align','Alignment','alHC'); add('distribute','Distribute','alHS'); if(els.filter(e=>!isLine(e)).length>1) add('connect','Connect','connect'); }
+    if(els.length>1 && onlyCanvas){ add('distribute','Distribute','alHS'); if(els.filter(e=>!isLine(e)).length>1) add('connect','Connect','connect'); }
     add('more','More','more',{title:'More actions'});
     const g=document.createElement('div'); g.className='grow'; t.appendChild(g);
     const del=toolBtn('del','Trash','trash',{title:'Move to trash (⌫). Drop cards here too.'}); del.id='trash'; t.appendChild(del);
@@ -214,8 +214,11 @@ function toggleLock(){ if(!S.sel.size) return; commit(); const all=[...S.sel].ev
 function alignSel(mode){ const els=[...S.sel].map(id=>S.els[id]).filter(e=>e.section==='canvas'&&!isLine(e)&&!e.locked); if(els.length<2) return; commit(); const rs=els.map(e=>({e,r:elRect(e)})); const b=bboxOf(els);
   if(mode==='left') rs.forEach(x=>x.e.x=b.x0); if(mode==='right') rs.forEach(x=>x.e.x=b.x1-x.r.w); if(mode==='hcenter'){ const c=(b.x0+b.x1)/2; rs.forEach(x=>x.e.x=snap(c-x.r.w/2)); }
   if(mode==='top') rs.forEach(x=>x.e.y=b.y0); if(mode==='bottom') rs.forEach(x=>x.e.y=b.y1-x.r.h); if(mode==='vcenter'){ const c=(b.y0+b.y1)/2; rs.forEach(x=>x.e.y=snap(c-x.r.h/2)); }
-  if(mode==='hdist'){ const s=rs.slice().sort((p,q)=>p.r.x-q.r.x); const total=s.reduce((m,x)=>m+x.r.w,0); const gap=((b.x1-b.x0)-total)/(s.length-1); let x=b.x0; s.forEach(o=>{ o.e.x=snap(x); x+=o.r.w+gap; }); }
-  if(mode==='vdist'){ const s=rs.slice().sort((p,q)=>p.r.y-q.r.y); const total=s.reduce((m,x)=>m+x.r.h,0); const gap=((b.y1-b.y0)-total)/(s.length-1); let y=b.y0; s.forEach(o=>{ o.e.y=snap(y); y+=o.r.h+gap; }); }
+  if(mode==='hdist'||mode==='vdist'){ const H=mode==='hdist'; const pos=r=>H?r.x:r.y, size=r=>H?r.w:r.h, cross=r=>H?r.y:r.x;
+    const sorted=rs.slice().sort((p,q)=>(pos(p.r)-pos(q.r))||(cross(p.r)-cross(q.r))); const first=sorted[0].r;
+    const span=Math.max(...rs.map(x=>pos(x.r)+size(x.r)))-pos(first); const total=rs.reduce((m,x)=>m+size(x.r),0); const empty=span-total;
+    const even=Math.round(empty/(sorted.length-1)); const gap = empty>0 && even>=GRID ? Math.round(even/GRID)*GRID : 2*GRID;
+    let at=pos(first); sorted.forEach(o=>{ if(H){ o.e.x=Math.round(at); o.e.y=first.y; } else { o.e.y=Math.round(at); o.e.x=first.x; } at+=size(o.r)+gap; }); }
   if(mode==='grid'){ const s=rs.slice().sort((p,q)=>(p.r.y-q.r.y)||(p.r.x-q.r.x)); const cols=Math.max(1,Math.round(Math.sqrt(s.length))); let x=b.x0,y=b.y0,rowH=0; s.forEach((o,i)=>{ if(i%cols===0&&i){ x=b.x0; y+=rowH+30; rowH=0; } o.e.x=snap(x); o.e.y=snap(y); x+=o.r.w+30; rowH=Math.max(rowH,o.r.h); }); }
   render(); save(); }
 
@@ -284,7 +287,7 @@ function moveGhost(ev){ ghost.style.left=(ev.clientX-drag.off.x)+'px'; ghost.sty
 function clearDropUI(){ document.querySelectorAll('.drop-ph').forEach(n=>n.remove()); document.querySelectorAll('.over,.attach-over').forEach(n=>n.classList.remove('over','attach-over')); }
 function findDrop(ev){ clearDropUI(); const under=document.elementsFromPoint(ev.clientX,ev.clientY);
   if(drag.kind==='task'){ const tl=under.map(n=>n.closest?.('.el.tasks')).find(Boolean); if(tl){ const rows=[...tl.querySelectorAll('.task')].filter(x=>!x.classList.contains('dragging')); let idx=rows.length; for(let i=0;i<rows.length;i++){ const r=rows[i].getBoundingClientRect(); if(ev.clientY<r.top+r.height/2){ idx=i; break; } } const ph=document.createElement('div'); ph.className='drop-ph'; const list=tl.querySelector('.tl'); if(idx>=rows.length) list.appendChild(ph); else list.insertBefore(ph,rows[idx]); tl.classList.add('over'); return {kind:'tasklist',id:tl.dataset.id,index:idx}; } return {kind:'none'}; }
-  if(under.some(n=>n.id==='trash')) { $('#trash')?.classList.add('over'); return {kind:'trash'}; }
+  { const tn=under.find(n=>n.id==='trash'||n.id==='trashbtn'); if(tn){ tn.classList.add('over'); return {kind:'trash'}; } }
   { const qd=qnDropTarget(ev,under); if(qd) return qd; }
   if(under.some(n=>n.id==='inbox'||n.id==='inbox-tab')) { $('#inbox').classList.add('over'); return {kind:'inbox'}; }
   { const at=attachDropTarget(ev,under); if(at) return at; }

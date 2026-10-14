@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.9.4 — 2026-10-14
+- **Distribute** de verdade: Horizontally coloca os cartões selecionados numa linha com espaçamento igual (Vertically, numa coluna). Usa o espaço que já existe entre eles quando dá; senão, 20px.
+- Seleção de vários cartões mostra só **Distribute** (a ferramenta Alignment saiu; alinhar texto continua no modo de texto).
+- **Lixeira só no header**: a da barra lateral saiu; arrastar um cartão até a lixeira do header também apaga. Com cartões selecionados, o botão Trash da barra continua sendo "apagar seleção".
+- Botão de apresentação escondido do header por enquanto (o atalho ⌘⌥P continua).
+
 ## v0.9.3 — 2026-10-14
 - **Prévia de PDF:** o cartão do PDF mostra a primeira página (com o número de páginas) e o visualizador mostra todas as páginas, roláveis (pdf.js, também offline no app).
 

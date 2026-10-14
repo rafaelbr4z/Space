@@ -131,7 +131,7 @@ await fresh();
 const pn = await mkAt('note', 200, 200, { content: { html: '<p>Present me</p>' } });
 const pcm = await mkAt('comment', 600, 200, { content: { text: 'hidden?', at: Date.now() } });
 await ev(() => { try { localStorage.clear(); } catch {} });
-await p.click('#present'); await p.waitForTimeout(100);
+await ev(() => document.querySelector('#present').click()); await p.waitForTimeout(100);
 let pp = await ev(() => { const p = document.querySelector('.pop.ppop'); return p && { t: p.querySelector('h3').textContent, tg: [...p.querySelectorAll('.ptg span')].map(x => x.textContent), on: [...p.querySelectorAll('input')].map(i => i.checked) }; });
 ok('present button opens settings panel', pp && pp.t === 'Presentation mode' && pp.tg.join() === 'Hide comments,Disable editing,Click a card to focus' && pp.on.join() === 'false,false,true', JSON.stringify(pp));
 await p.click('.ppop .ptg:nth-child(1)'); await p.click('.ppop .ptg:nth-child(2)'); await p.click('.ppop .pbtn'); await p.waitForTimeout(250);
@@ -245,10 +245,10 @@ ok('toolbar back in place after closing', await ev(() => !document.querySelector
 // ===== 10. customizable toolbar + More
 await fresh();
 let tn10 = await toolNames();
-ok('create toolbar has More after primary tools', tn10.includes('More') && tn10.indexOf('More') > tn10.indexOf('Heading') && tn10.indexOf('More') < tn10.indexOf('Add image'), tn10.join('|'));
-await p.click('#tools [data-tool=cmore]'); await p.waitForTimeout(80);
-ok('More popup shows Customize toolbar', await ev(() => !!document.querySelector('.mpop .mcust')));
-await p.click('.mpop .mcust'); await p.waitForTimeout(80);
+ok('create toolbar fits without More when there is room; no Trash in sidebar', !tn10.includes('More') && !tn10.includes('Trash') && tn10.includes('Heading'), tn10.join('|'));
+await p.click('#tools', { button: 'right', position: { x: 30, y: 200 } }); await p.waitForTimeout(80);
+ok('right-click on toolbar offers Customize toolbar', await ev(() => !!document.querySelector('.tbctx button')));
+await p.click('.tbctx button'); await p.waitForTimeout(80);
 ok('toolbar settings shows all tools as toggles', await ev(() => document.querySelectorAll('#modal .tbopt').length === 15 && document.querySelectorAll('#modal .tbopt.on').length === 15));
 await p.click('#modal .tbopt[data-k=map]'); await p.click('#modal .tbopt[data-k=video]'); await p.click('#tbdone'); await p.waitForTimeout(80);
 tn10 = await toolNames();
@@ -284,6 +284,25 @@ await p.mouse.dblclick(pfc.x, pfc.y); await p.waitForTimeout(1500);
 ok('PDF opens in viewer with all pages rendered', await ev(() => document.querySelectorAll('#fview .fvpage').length === 3 && /3 pages/.test(document.querySelector('#fview .fvt small').textContent)));
 await p.screenshot({ path: '/tmp/claude-0/pdfview.png' }); await p.keyboard.press('Escape'); await p.waitForTimeout(200); await p.screenshot({ path: '/tmp/claude-0/pdfcard.png', clip: { x: 0, y: 0, width: 900, height: 900 } });
 await p.keyboard.press('Escape');
+
+// ===== distribute + trash in header
+await fresh();
+const d1 = await mkAt('note', 100, 100, { content: { html: '<p>A</p>' } }), d2 = await mkAt('note', 120, 260, { content: { html: '<p>B</p>' } }), d3 = await mkAt('note', 90, 420, { content: { html: '<p>C</p>' } });
+await sel([d1, d2, d3]);
+const tsel = await toolNames();
+ok('multi-select shows Distribute, no Alignment', tsel.includes('Distribute') && !tsel.includes('Alignment'), tsel.join('|'));
+await p.click('#tools [data-tool=distribute]'); await p.click('.pop [data-a=hdist]'); await p.waitForTimeout(100);
+let dd = await ev(ids => ids.map(id => { const e = window.__space.S.els[id]; const n = document.querySelector(`#world .el[data-id="${id}"]`); return { x: e.x, y: e.y, w: n.offsetWidth }; }), [d1, d2, d3]);
+const sx = dd.slice().sort((a, b) => a.x - b.x); const g1 = sx[1].x - (sx[0].x + sx[0].w), g2 = sx[2].x - (sx[1].x + sx[1].w);
+ok('Horizontally: stacked cards become a row with equal gaps', dd.every(o => o.y === dd[0].y) && g1 === g2 && g1 > 0, JSON.stringify(dd));
+await sel([d1, d2, d3]); await p.click('#tools [data-tool=distribute]'); await p.click('.pop [data-a=vdist]'); await p.waitForTimeout(100);
+dd = await ev(ids => ids.map(id => { const e = window.__space.S.els[id]; const n = document.querySelector(`#world .el[data-id="${id}"]`); return { x: e.x, y: e.y, h: n.offsetHeight }; }), [d1, d2, d3]);
+const sy = dd.slice().sort((a, b) => a.y - b.y); const v1 = sy[1].y - (sy[0].y + sy[0].h), v2 = sy[2].y - (sy[1].y + sy[1].h);
+ok('Vertically: cards become a column with equal gaps', dd.every(o => o.x === dd[0].x) && v1 === v2 && v1 > 0, JSON.stringify(dd));
+ok('presentation button hidden from header', await ev(() => getComputedStyle(document.querySelector('#present')).display === 'none'));
+await sel([]); const dc1 = await center(d1); const tb = await ev(() => { const r = document.querySelector('#trashbtn').getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+await p.mouse.move(dc1.x, dc1.y); await p.mouse.down(); await p.mouse.move(tb.x, tb.y, { steps: 10 }); await p.mouse.up(); await p.waitForTimeout(100);
+ok('dragging a card onto the header trash deletes it', await ev(id => window.__space.S.els[id].trashed === true, d1));
 
 ok('no page errors', errs.length === 0, errs.join(' | '));
 await p.screenshot({ path: process.env.SHOT || '/tmp/round2.png' });

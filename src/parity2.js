@@ -359,7 +359,7 @@ function renderCreateTools(t){
   const sepIdx=items.indexOf(null); const primary=items.slice(0,sepIdx), secondary=items.slice(sepIdx+1);
   let shownP=primary.filter(x=>toolOn(x[0])), shownS=secondary.filter(x=>toolOn(x[0]));
   let collapsed=[...primary.filter(x=>!toolOn(x[0])), ...secondary.filter(x=>!toolOn(x[0]))];
-  const build=()=>{ t.innerHTML=''; shownP.forEach(x=>t.appendChild(mkTool(x))); if(collapsed.length){ const more=toolBtn('cmore','More','ellipsis',{title:'More tools'}); t.appendChild(more); } t.appendChild(sep()); shownS.forEach(x=>t.appendChild(mkTool(x))); const g=document.createElement('div'); g.className='grow'; t.appendChild(g); const tr=toolBtn('trash','Trash','trash',{title:'Drop here to delete'}); tr.id='trash'; t.appendChild(tr); };
+  const build=()=>{ t.innerHTML=''; shownP.forEach(x=>t.appendChild(mkTool(x))); if(collapsed.length){ const more=toolBtn('cmore','More','ellipsis',{title:'More tools'}); t.appendChild(more); } t.appendChild(sep()); shownS.forEach(x=>t.appendChild(mkTool(x))); };
   build();
   // sem espaço: recolhe do fim da lista primária pro More (ordem de colapso do Milanote)
   let guard=30; while(t.scrollHeight>t.clientHeight+1 && guard--){ if(!collapsed.length){ collapsed.unshift(shownP.pop()); build(); continue; } if(shownP.length>3){ collapsed.unshift(shownP.pop()); } else if(shownS.length){ collapsed.push(shownS.pop()); } else break; build(); }
