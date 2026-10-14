@@ -6,8 +6,11 @@ const out=[]; const ok=(n,c,i='')=>out.push((c?'PASS ':'FAIL ')+n+(i?' — '+i:'
 const boards=await p.evaluate(()=>window.__space.canvasKids('home').filter(e=>e.type==='board').map(e=>e.id));
 for(const id of boards){ await p.evaluate(id=>{ const n=document.querySelector('#world .el[data-id="'+id+'"]'); n.dispatchEvent(new MouseEvent('dblclick',{bubbles:true})); },id); await p.waitForTimeout(250); ok('open board '+id, await p.evaluate(id=>window.__space.S.cur===id,id)); await p.keyboard.press('Control+u'); await p.waitForTimeout(150); }
 // every template applies cleanly
-await p.click('#templates'); await p.waitForTimeout(100); const tids=await p.$$eval('#modal [data-t]', bs=>bs.map(b=>b.dataset.t)); await p.keyboard.press('Escape');
-for(const t of tids){ if(t==='blank') continue; await p.click('#templates'); await p.click('#modal [data-t="'+t+'"]'); await p.waitForTimeout(150); }
+const homeId=await p.evaluate(()=>window.__space.S.cur);
+const newBoard=async()=>{ await p.evaluate(()=>{ const s=window.__space; const b=s.mk('board',{content:{title:''}}); s.S.els[b.id]=b; s.openBoard(b.id); }); await p.waitForTimeout(80); };
+await newBoard(); const tids=await p.$$eval('#tplp [data-t]', bs=>bs.map(b=>b.dataset.t));
+for(const t of tids){ if(t==='blank') continue; await newBoard(); await p.click('#tplp [data-t="'+t+'"]'); await p.waitForTimeout(120); await p.click('#tplp .tpuse'); await p.waitForTimeout(120); }
+await p.evaluate(id=>window.__space.openBoard(id), homeId);
 ok('all '+(tids.length-1)+' templates applied', errs.length===0, errs.join('|'));
 // search
 await p.keyboard.press('Control+f'); await p.keyboard.type('brief'); await p.waitForTimeout(150); ok('search finds results', (await p.$$('.spanel .nav')).length>0); await p.keyboard.press('Escape');
