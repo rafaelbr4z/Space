@@ -1,5 +1,8 @@
 # Changelog
 
+## Próxima versão (dev)
+- (nada ainda)
+
 ## v0.9.7 — 2026-10-14
 - **Atualização dentro do app**: o Space procura versão nova ao abrir e a cada 6 horas. Quando tem, aparece "Space x.y.z is available" com **Update** (baixa com barra de progresso, salva os quadros e reinicia) ou **Later**. Na janela de atalhos (**?**) aparece a versão e o botão *Check for Updates…*.
 - Instaladores publicados em Releases do próprio repositório (que passa a ser público, um repositório só). As atualizações são assinadas.

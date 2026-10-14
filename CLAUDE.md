@@ -29,6 +29,11 @@ npx tauri dev | npx tauri build
 - No app de desktop, downloads passam por `saveOut`/`appSave`; não use `<a download>` direto.
 - O preview no claude.ai bloqueia embeds do YouTube/Maps (`IS_HOSTED`); teste esses no app ou no `dist/Space.zip`.
 
+## Branches (combinado com o Braz em 2026-10-14)
+- **`dev`**: todo trabalho novo. Commit e push na `dev`, publique o preview (artifact) para o Braz testar. Push na `dev` **não** gera instalador nem atualização.
+- **`main`**: só a versão estável. Quando o Braz disser que a versão está 100%: suba a versão (package.json, src-tauri/Cargo.toml, src-tauri/tauri.conf.json), feche a seção do CHANGELOG com o número e a data, faça merge da `dev` na `main` e push. O Actions publica a release e o app instalado oferece "Update".
+- Nunca faça commit direto na `main`. No CHANGELOG, o que ainda não foi lançado fica em `## Próxima versão (dev)`.
+
 ## Publicar
 - Preview: artifact `https://claude.ai/artifact/1msw9bEboLXJkRHfXVwMvL` (publicar `space.html`).
 - App: repositório público `github.com/rafaelbr4z/Space` (código e instaladores num repo só). Cada push na `main` dispara o GitHub Actions, que gera `.dmg` (Mac Apple Silicon) e `.exe` e publica em **Releases** com a tag `v<versão>` (o próprio Actions cria a tag; a sessão do Claude não consegue enviar tags nem baixar arquivos do GitHub). O app instalado se atualiza pelo `latest.json` dessas releases, por isso o repositório é público. Nunca coloque chaves ou senhas no repositório. Suba a versão (package.json, Cargo.toml, tauri.conf.json) para gerar uma release nova; mesma versão substitui os arquivos.

@@ -33,6 +33,7 @@ Biblioteca pessoal de links, referências e imagens, organizada em quadros. Recu
 | 2026-10-13 | App de desktop com **Tauri 2** (Mac Apple Silicon primeiro; Windows sai do mesmo código). Repositório GitHub privado no início (público desde 2026-10-14, ver abaixo). |
 | 2026-10-14 | Fora por enquanto: botão de apresentação no header (atalho fica). Lixeira só no header. Seleção múltipla: só Distribute (linha/coluna com espaçamento igual). |
 | 2026-10-14 | Atualização dentro do app. Um repositório só (Space), que passa a ser **público** para o app baixar as atualizações (decisão do Braz: não quer vários repositórios). |
+| 2026-10-14 | Trabalho na branch `dev` (testes pelo preview); merge na `main` só quando o Braz aprovar a versão — é o merge que gera a atualização do app. |
 | 2026-10-13 | Importador do Milanote é a menor prioridade (dá para copiar e colar). |
 
 ## Onde estamos (v0.9)
