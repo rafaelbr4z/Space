@@ -963,3 +963,12 @@ svg.hi,svg.lu,.tool i svg.hi,.tool i svg.lu,.hbtn svg.hi,.hbtn svg.lu,.pop butto
 @keyframes tplpulse{0%{transform:scale(1)}40%{transform:scale(1.05);box-shadow:0 0 0 6px color-mix(in srgb,var(--action) 35%,transparent)}100%{transform:scale(1)}}
 body.tpl-preview #world{opacity:.92}
 body.tpl-preview #stage{cursor:default}
+
+/* v0.9.6 — botão fixo de templates, acima do zoom */
+#tplbtn{position:absolute;right:14px;bottom:54px;z-index:6;height:32px;padding:0 13px 0 10px;display:flex;align-items:center;gap:6px;border-radius:980px;font-size:12px;font-weight:500;color:var(--text-2);background:var(--glass-bar);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);box-shadow:0 0 0 .5px var(--hairline);user-select:none;transition:right .3s cubic-bezier(.32,.72,0,1),color .15s}
+#tplbtn:hover{color:var(--text);background-color:var(--control)}
+#tplbtn svg{width:16px;height:16px}
+#app.inbox-open #tplbtn{right:346px}
+#app.present #tplbtn,body.tplp-open #tplbtn{display:none}
+#tplp{bottom:54px}
+#tplp .tpuse:disabled{opacity:.45;filter:none;cursor:default}

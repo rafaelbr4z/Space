@@ -1,6 +1,6 @@
 [package]
 name = "space"
-version = "0.9.5"
+version = "0.9.6"
 description = "Space — personal local-first boards"
 authors = ["Rafael Braz"]
 edition = "2021"

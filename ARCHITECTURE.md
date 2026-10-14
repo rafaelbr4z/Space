@@ -87,6 +87,6 @@ O CI (`build.yml`) instala Node, Python e Rust, roda `build.py` e `tauri-action`
 
 Playwright, importado do caminho global (`/home/claude/.npm-global/lib/node_modules/playwright/index.mjs` no ambiente do Claude; ajuste para `import { chromium } from 'playwright'` numa máquina com `npm i -D playwright`). Rodar `python3 build.py` antes.
 
-- `test/round2.mjs` (76) — itens da v0.7. `test/parity.mjs` (46) — v0.6. `tour.mjs` — passeio geral. `new.mjs` — ferramentas e seed. `stress2.mjs` — linhas e arrastos (1 falso negativo conhecido).
+- `test/round2.mjs` (96) — itens da v0.7. `test/parity.mjs` (46) — v0.6. `tour.mjs` — passeio geral. `new.mjs` — ferramentas e seed. `stress2.mjs` — linhas e arrastos (1 falso negativo conhecido).
 - `window.__space` expõe `S, render, save, mk, addEl, commit, view, applyView, canvasKids, listKids, inboxKids, openBoard, navBack, navFwd` para montar cenários.
 - Pegadinhas: pointer capture redireciona o `click`; no Linux use Control no lugar de ⌘; elementos cortados por `overflow` ainda contam como visíveis; CDNs ficam bloqueados no sandbox — os testes de export usam `p.route` para servir `vendor/libs`.

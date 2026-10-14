@@ -327,6 +327,17 @@ const svb = await ev(() => { const r = document.querySelector('.cpick .cpsv').ge
 await p.mouse.click(svb.x, svb.y); await p.waitForTimeout(60);
 ok('picking a color changes board background live', await ev(() => /^#/.test(window.__space.S.els[window.__space.S.cur].content.bg || '') && document.querySelector('#stage').style.backgroundColor !== ''));
 await p.keyboard.press('Escape');
+// fixed Templates button
+ok('fixed Templates button sits above the zoom HUD', await ev(() => { const b = document.querySelector('#tplbtn').getBoundingClientRect(), z = document.querySelector('#zoomhud').getBoundingClientRect(); return b.width > 0 && b.bottom <= z.top && Math.abs(b.right - z.right) < 4; }));
+await p.click('#tplbtn'); await p.waitForTimeout(100);
+ok('button reopens picker on a dismissed board and hides itself', await ev(() => !!document.querySelector('#tplp') && getComputedStyle(document.querySelector('#tplbtn')).display === 'none'));
+await p.click('#tplp .tpx'); await p.waitForTimeout(80);
+await ev(() => { const s = window.__space; s.commit(); const e = s.mk('note', { content: { html: 'keep me' } }); e.x = 40; e.y = 40; s.addEl(e); s.render(); });
+await p.click('#tplbtn'); await p.waitForTimeout(100);
+ok('on a board with content: no Empty board option, button disabled', await ev(() => !document.querySelector('#tplp .tpi[data-t=blank]') && document.querySelector('#tplp .tpuse').disabled));
+await p.click('#tplp .tpi[data-t=week]'); await p.waitForTimeout(150);
+await p.click('#tplp .tpuse'); await p.waitForTimeout(150);
+ok('template is added below existing content', await ev(() => { const s = window.__space, k = s.canvasKids(s.S.cur); const n = k.find(e => e.type === 'note' && /keep me/.test(e.content.html)); const cols = k.filter(e => e.type === 'column'); return n && cols.length === 7 && cols.every(c => c.y > n.y + 40) && !document.querySelector('#tplp'); }));
 
 ok('no page errors', errs.length === 0, errs.join(' | '));
 await p.screenshot({ path: process.env.SHOT || '/tmp/round2.png' });

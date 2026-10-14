@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.9.6 — 2026-10-14
+- **Botão fixo "Templates"** no canto inferior direito, logo acima do zoom. Abre o seletor em qualquer quadro, inclusive nos que já têm conteúdo ou em que o seletor foi fechado. Em quadro com conteúdo, o template entra abaixo do que já existe (a prévia mostra onde vai ficar). O botão some enquanto o seletor está aberto.
+
 ## v0.9.5 — 2026-10-14
 - **Templates no canto inferior direito** (como o Milanote): em quadro vazio aparece "Choose a template"; clicar num template mostra a prévia ao vivo no quadro, "Use this template" aplica (com desfazer), o X dispensa para aquele quadro. Criar um quadro novo não abre mais o modal de templates.
 - **Seletor de cor próprio**: "Choose Custom Color" (fundo do quadro) e a cor personalizada dos cartões abrem ao lado de onde foram chamados, com área de cor, matiz, hex e conta-gotas.
